@@ -16,7 +16,7 @@ const MyTasks = () => {
       if (!user) return;
 
       const q = query(
-        collection(db, "tasks"),
+        collection(db, "requests"),
         where("helperId", "==", user.uid)
       );
 
@@ -47,10 +47,24 @@ const MyTasks = () => {
             key={task.id}
             className="bg-gray-800 rounded-2xl p-6 border border-gray-700 shadow-xl mb-4"
           >
-            <h2 className="text-xl font-bold text-white">{task.title}</h2>
-            <p className="text-gray-400 text-sm mt-1">{task.description}</p>
+            <h2 className="text-xl font-bold text-white">{task.type}</h2>
+            <p className="text-gray-400 text-sm mt-1">{task.desc}</p>
             <p className="mt-2 text-gray-300">
               Credits: <span className="font-bold">{task.credits}</span>
+            </p>
+            <p className="mt-2 text-gray-300">
+              From: <span className="font-bold">{task.requesterName}</span>
+             
+            </p>
+            <p className="mt-2 text-gray-300">
+              Contact: <span className="font-bold">{task.requesterPhone}</span>
+             
+            </p>
+            <p className="mt-2 text-gray-300">
+              Source: <span className="font-bold">{task.source?.name}</span>
+            </p>
+            <p className="mt-2 text-gray-300">
+              Destination: <span className="font-bold">{task.dest?.name}</span>
             </p>
             <p className="text-gray-400 text-sm">Status: {task.status}</p>
           </div>

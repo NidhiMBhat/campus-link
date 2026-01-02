@@ -110,11 +110,11 @@ const Tasks = () => {
               <div className="flex flex-col gap-2 text-sm text-gray-400 mb-6">
                 <div className="flex items-center gap-2">
                   <MapPin size={16} /> <span className="text-gray-500">From:</span>{" "}
-                  {task.source}
+                  {task.source?.name}
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin size={16} /> <span className="text-gray-500">To:</span>{" "}
-                  {task.dest}
+                  {task.dest?.name}
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock size={16} />{" "}
@@ -124,7 +124,7 @@ const Tasks = () => {
 
               {task.requesterId !== currentUserId ? (
               <button
-                onClick={() => handleAcceptTask(task)}
+                onClick={() => handleAcceptTask(task.id)}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2"
               >
                 Accept Task <ArrowRight size={20} />
