@@ -109,9 +109,9 @@ const MyRequests = () => {
                 Time: {task.time}
               </div>
             </div>
-            {activeRequest.status === "Accepted" && (
+            {task.status === "Accepted" && (
             <button
-              onClick={handleCompleteTask}
+              onClick={()=>handleCompleteTask(task)}
               className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold"
             >
               Mark as Completed

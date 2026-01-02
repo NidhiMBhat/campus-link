@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, CheckCircle } from "lucide-react";
 import { auth, db } from "../firebase";
 import { CAMPUS_LOCATIONS } from "../data/locations";
 import { doc, getDoc, addDoc, collection, serverTimestamp, GeoPoint } from "firebase/firestore";
 
-const RequestTask = () => {
+const RequestTask = () => 
+  {
   const navigate = useNavigate();
   const [viewState, setViewState] = useState("initial");
   const [loading, setLoading] = useState(false);
@@ -16,7 +17,59 @@ const RequestTask = () => {
     source: null,
     dest: null,
     time: "30 mins",
+    credits:null,
   });
+  
+  const getCreditRange = (source, dest, time) => {
+  if (!source || !dest) return { min: 5, max: 20 };
+
+  // Haversine formula to find distance in KM
+  const R = 6371; // Earth's radius
+  const dLat = (dest.lat - source.lat) * Math.PI / 180;
+  const dLng = (dest.lng - source.lng) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(source.lat * Math.PI / 180) * Math.cos(dest.lat * Math.PI / 180) * Math.sin(dLng/2) * Math.sin(dLng/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const distanceInMeters = R * c * 1000;
+
+  // Base credits on distance (e.g., 10 credits per 100 meters)
+  let baseMin = Math.max(5, Math.round(distanceInMeters / 15));
+  let baseMax = baseMin + 30;
+
+  // Multiplier based on time urgency
+  if (time === "10 mins") {
+    baseMin += 10;
+    baseMax += 20;
+  }
+  else if (time === "20 mins") {
+    baseMin += 7;
+    baseMax += 15;
+  }
+  else if (time === "30 mins") {
+    baseMin += 5;
+    baseMax += 10;
+  } 
+  else if (time === "45 mins") {
+    baseMin += 2;
+    baseMax += 5;
+  }
+  else if (time === "1 Hour") {
+    baseMin = Math.max(5, baseMin - 5); // Cheaper if there's no rush
+  }
+
+  return { min: baseMin, max: baseMax };
+};
+
+  const { min, max } = getCreditRange(formData.source, formData.dest, formData.time);
+
+  // Sync credits when min/max changes
+  useEffect(() => {
+    if (formData.credits < min) setFormData(prev => ({ ...prev, credits: min }));
+    if (formData.credits > max) setFormData(prev => ({ ...prev, credits: max }));
+  }, [min, max]);
+
+
   
 
   const handleInputChange = (e) => {
@@ -64,6 +117,7 @@ const RequestTask = () => {
         requesterPhone: userData.phone || "",
         helperId: null,
         createdAt: serverTimestamp(),
+        credits: formData.credits,
       });
   
       // ONLY set success if the write completes successfully
@@ -180,7 +234,30 @@ const RequestTask = () => {
             <option>30 mins</option>
             <option>45 mins</option>
             <option>1 Hour</option>
+
           </select>
+
+          <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700">
+            <div className="flex justify-between items-center mb-4">
+              <label className="text-gray-400 text-sm">Credits Offered</label>
+              <span className="text-xl font-bold text-indigo-400">{formData.credits} Cr</span>
+            </div>
+            
+            <input
+              type="range"
+              min={min}
+              max={max}
+              step="1"
+              value={formData.credits}
+              onChange={(e) => setFormData({ ...formData, credits: parseInt(e.target.value) })}
+              className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+            />
+            
+            <div className="flex justify-between text-[10px] text-gray-500 mt-2 font-mono uppercase tracking-widest">
+              <span>Min: {min}</span>
+              <span>Max: {max}</span>
+            </div>
+          </div>
 
           <button
             type="submit"
