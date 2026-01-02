@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* NOTE: In Tailwind v4, we remove the @apply rules for body here 
+  and add them directly to index.html (see below). 
+  This avoids the "unknown utility class" error.
+*/
