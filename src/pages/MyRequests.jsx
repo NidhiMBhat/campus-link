@@ -7,6 +7,8 @@ import {
   MapPin,
   Loader2,
   Trash2,
+  CheckCircle,
+  Phone,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
@@ -20,6 +22,7 @@ const MyRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeRequest, setActiveRequest] = useState(null);
+  const [processingId, setProcessingId] = useState(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("my_active_request");
@@ -34,7 +37,8 @@ const MyRequests = () => {
 
       const q = query(
         collection(db, "requests"),
-        where("requesterId", "==", user.uid)
+        where("requesterId", "==", user.uid),
+        where("status", "in", ["pending", "accepted"])
       );
 
       const snap = await getDocs(q);
@@ -45,16 +49,19 @@ const MyRequests = () => {
     fetchRequests();
   }, [user]);
 
-  const handleCompleteTask = async () => {
+  const handleCompleteTask = async (task) => {
+    setProcessingId(task.id);
     try {
-      await completeTask(activeRequest.id);
+      await completeTask(task, "requester");
       alert("Task completed! Credits transferred.");
       setActiveRequest(null);
     } catch (err) {
       alert(err.message);
     }
+    finally {
+      setProcessingId(null);
+    }
   };
-  
 
   const handleCancel = async (taskId) => {
     if (!window.confirm("Cancel this request?")) return;
@@ -92,6 +99,7 @@ const MyRequests = () => {
                 <Loader2 size={12} className="animate-spin" />
                 {task.status || "pending"}
               </span>
+              
             </div>
 
             {/* Details */}
@@ -109,15 +117,41 @@ const MyRequests = () => {
                 Time: {task.time}
               </div>
             </div>
-            {task.status === "Accepted" && (
-            <button
-              onClick={()=>handleCompleteTask(task)}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold"
-            >
-              Mark as Completed
-            </button>
-          )}
 
+            {task.status === "accepted" && (
+              <div className="bg-indigo-900/20 border border-indigo-500/30 rounded-xl p-4 mb-4 space-y-4">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-indigo-300 text-[10px] uppercase font-bold">Deliverer Contact</p>
+                    <p className="text-white font-medium">{task.helperName || "Assigned Helper"}</p>
+                    <p className="text-gray-400 text-sm">{task.helperPhone || "Contact via App"}</p>
+                  </div>
+                  <a href={`tel:${task.helperPhone}`} className="bg-indigo-600 p-2 rounded-full hover:bg-indigo-500 transition">
+                    <Phone size={18} className="text-white" />
+                  </a>
+                </div>
+              <button
+                  onClick={() =>handleCompleteTask(task)}
+                  disabled={task.requesterConfirmed || processingId === task.id}
+                  className={`w-full py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition ${
+                    task.requesterConfirmed 
+                    ? "bg-gray-700 text-gray-400 cursor-not-allowed" 
+                    : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  }`}
+                >
+                  {processingId === task.id ? <Loader2 size={20} className="animate-spin" /> : 
+                   task.requesterConfirmed ? (
+                     <> <CheckCircle size={20} /> Waiting for Deliverer...</>
+                   ) : "Confirm I Received Items"}
+                </button>
+                
+                {task.helperConfirmed && !task.requesterConfirmed && (
+                  <p className="text-xs text-center text-amber-400 animate-pulse">
+                    The deliverer has marked this as finished. Please confirm!
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Footer */}
             <div className="border-t border-gray-700 pt-4 flex justify-between items-center">

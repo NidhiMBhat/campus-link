@@ -43,18 +43,31 @@ const Tasks = () => {
     fetchTasks();
   }, []);
 
-  const handleAcceptTask = async (taskId) => {
-    try {
+  const handleAcceptTask = async (task) => {
+   
       const user = auth.currentUser;
       if (!user) return;
-
-      await updateDoc(doc(db, "requests", taskId), {
+      try {
+    // 1. Check if the helper already has an active task in 'Accepted' status
+        const activeTaskQuery = query(
+          collection(db, "requests"),
+          where("helperId", "==", user.uid),
+          where("status", "==", "accepted")
+    );
+        const activeTaskSnap = await getDocs(activeTaskQuery);
+        if (!activeTaskSnap.empty) {
+          alert("You can only accept one task at a time. Please complete your current task first.");
+          return;
+        }
+      await updateDoc(doc(db, "requests", task.id), {
         status: "accepted",
         helperId: user.uid,
+        requesterConfirmed: false, // Initialize for dual-confirmation
+        helperConfirmed: false,
       });
 
       // Remove accepted task from list instantly
-      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+      setTasks((prev) => prev.filter((t) => t.id !== task.id));
       navigate("/my-tasks");
     } catch (err) {
       console.error(err);
@@ -97,9 +110,9 @@ const Tasks = () => {
                   </div>
                 </div>
 
-                {/* Credits placeholder */}
+               
                 <span className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold">
-                  xx Cr
+                    {task.credits || 0} Cr
                 </span>
               </div>
 
@@ -124,7 +137,7 @@ const Tasks = () => {
 
               {task.requesterId !== currentUserId ? (
               <button
-                onClick={() => handleAcceptTask(task.id)}
+                onClick={() => handleAcceptTask(task)}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2"
               >
                 Accept Task <ArrowRight size={20} />

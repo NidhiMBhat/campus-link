@@ -19,6 +19,18 @@ const RequestTask = () =>
     time: "30 mins",
     credits:null,
   });
+
+  const [userCredits, setUserCredits] = useState(0);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (auth.currentUser) {
+        const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
+        if (snap.exists()) setUserCredits(snap.data().credits || 0);
+      }
+    };
+    fetchBalance();
+  }, []);
   
   const getCreditRange = (source, dest, time) => {
   if (!source || !dest) return { min: 5, max: 20 };
@@ -98,7 +110,14 @@ const RequestTask = () =>
       // Fetch user profile
       const userSnap = await getDoc(doc(db, "users", user.uid));
       const userData = userSnap.data() || {};
+      const currentCredits = userData.credits || 0;
   
+      // 2. Check if user has enough credits    
+      if (currentCredits < formData.credits) {
+        alert(`Insufficient credits. You have ${currentCredits} Cr, but need ${formData.credits} Cr to post this request.`);
+        setLoading(false);
+        return;
+      }
       // Create GeoPoints
       const sourceGeo = new GeoPoint(formData.source.lat, formData.source.lng);
       const destGeo = new GeoPoint(formData.dest.lat, formData.dest.lng);
@@ -118,6 +137,8 @@ const RequestTask = () =>
         helperId: null,
         createdAt: serverTimestamp(),
         credits: formData.credits,
+        requesterConfirmed: false,
+        helperConfirmed: false,
       });
   
       // ONLY set success if the write completes successfully
@@ -261,11 +282,15 @@ const RequestTask = () =>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || formData.credits > userCredits}
             onClick={handleSubmit}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl"
-          >
-            {loading ? "Posting..." : "Submit Request"}
+            className={`w-full font-bold py-4 rounded-xl transition ${
+                formData.credits > userCredits 
+                ? "bg-gray-600 cursor-not-allowed opacity-50" 
+                : "bg-indigo-600 hover:bg-indigo-700 text-white"
+              }`}
+            >
+              {loading ? "Posting..." : formData.credits > userCredits ? "Insufficient Balance" : "Submit Request"}
           </button>
         </form>
       )}
