@@ -36,6 +36,12 @@ export const AuthProvider = ({ children }) => {
       credits : 0,
       requested: 0,
       helped: 0,
+      lastKnownLocation: {
+        lat: 12.96,
+        lng: 77.60,
+        updatedAt: timestamp
+      },
+      locationPermission: "granted",
     });
   
     return res.user;

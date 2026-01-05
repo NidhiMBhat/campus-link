@@ -139,6 +139,7 @@ const RequestTask = () =>
         credits: formData.credits,
         requesterConfirmed: false,
         helperConfirmed: false,
+        
       });
   
       // ONLY set success if the write completes successfully

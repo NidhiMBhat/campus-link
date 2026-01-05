@@ -10,13 +10,15 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
+import { createNotification } from "../services/notifications";
+
 
 const Tasks = () => {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const currentUserId = auth.currentUser?.uid;
-
+  
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -65,6 +67,11 @@ const Tasks = () => {
         requesterConfirmed: false, // Initialize for dual-confirmation
         helperConfirmed: false,
       });
+      await createNotification({
+        userId: requestOwnerId, // IMPORTANT
+        message: "Your request was accepted",
+        requestId: request.id,
+      });
 
       // Remove accepted task from list instantly
       setTasks((prev) => prev.filter((t) => t.id !== task.id));
@@ -83,6 +90,7 @@ const Tasks = () => {
       >
         <ArrowLeft size={20} className="mr-2" /> Back
       </button>
+      
 
       <h1 className="text-2xl font-bold text-white mb-6">Available Tasks</h1>
 

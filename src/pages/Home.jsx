@@ -3,9 +3,32 @@ import { PlusCircle, List, UserCircle, CheckSquare, Clock } from 'lucide-react';
 import NavCard from '../components/NavCard';
 import LeaderboardCard from '../components/LeaderboardCard';
 import { useNavigate } from 'react-router-dom';
+import { requestAndStoreLocation } from "../services/location";
+import { checkNearbyRequests } from "../services/notifications";
+import NotificationBell from "../components/NotificationBell";
+import { auth, db } from "../firebase";
+import { useEffect } from 'react';
+
+
 
 const Home = () => {
   const navigate = useNavigate();
+  const currentUser = auth.currentUser;
+    
+    useEffect(() => {
+      if (!currentUser) return;
+  
+      
+      requestAndStoreLocation(currentUser);
+      (async () => {
+        const result = await checkNearbyRequests(currentUser);
+        console.log("Nearby requests check done", result);
+      })();
+      
+  
+      
+      checkNearbyRequests(currentUser);
+    }, [currentUser]);
 
   return (
     <div className="min-h-screen p-6 pb-20 max-w-4xl mx-auto">
@@ -15,7 +38,9 @@ const Home = () => {
           <h1 className="text-2xl font-bold text-white">Hello, Student! 👋</h1>
           <p className="text-gray-400 text-sm">What do you need help with today?</p>
         </div>
-
+        <div>
+      <NotificationBell currentUser={currentUser} />
+      </div>
         {/* Profile Icon with Tooltip */}
         <div className="relative group">
           <button 
