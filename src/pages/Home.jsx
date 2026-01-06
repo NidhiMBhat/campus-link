@@ -1,63 +1,74 @@
-import React from 'react';
-import { PlusCircle, List, UserCircle, CheckSquare, Clock } from 'lucide-react'; // Added Clock icon
+import React, { useEffect } from 'react';
+import { PlusCircle, List, UserCircle, CheckSquare, Clock } from 'lucide-react'; 
 import NavCard from '../components/NavCard';
 import LeaderboardCard from '../components/LeaderboardCard';
 import { useNavigate } from 'react-router-dom';
 import { requestAndStoreLocation } from "../services/location";
 import { checkNearbyRequests } from "../services/notifications";
 import NotificationBell from "../components/NotificationBell";
-import { auth, db } from "../firebase";
-import { useEffect } from 'react';
-
-
+import { auth } from "../firebase";
 
 const Home = () => {
   const navigate = useNavigate();
   const currentUser = auth.currentUser;
     
-    useEffect(() => {
-      if (!currentUser) return;
-  
+  useEffect(() => {
+    if (!currentUser) return;
+
+    requestAndStoreLocation(currentUser);
+    (async () => {
+      const result = await checkNearbyRequests(currentUser);
+      console.log("Nearby requests check done", result);
+    })();
       
-      requestAndStoreLocation(currentUser);
-      (async () => {
-        const result = await checkNearbyRequests(currentUser);
-        console.log("Nearby requests check done", result);
-      })();
-      
-  
-      
-      checkNearbyRequests(currentUser);
-    }, [currentUser]);
+    checkNearbyRequests(currentUser);
+  }, [currentUser]);
 
   return (
-    <div className="min-h-screen p-6 pb-20 max-w-4xl mx-auto">
+    // Added relative to manage z-index of glows
+    <div className="min-h-screen p-6 pb-20 max-w-4xl mx-auto relative">
+      
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-white">Hello, Student! 👋</h1>
           <p className="text-gray-400 text-sm">What do you need help with today?</p>
         </div>
-        <div>
-      <NotificationBell currentUser={currentUser} />
-      </div>
-        {/* Profile Icon with Tooltip */}
-        <div className="relative group">
-          <button 
-            onClick={() => navigate('/profile')} 
-            className="p-2 bg-gray-800 rounded-full text-indigo-400 hover:bg-gray-750 hover:text-indigo-300 transition shadow-md border border-gray-700"
-          >
-            <UserCircle size={32} />
-          </button>
-          <span className="absolute top-full right-0 mt-2 px-3 py-1 text-xs font-medium text-white bg-gray-700 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-            My Profile
-          </span>
+
+        {/* Icons Container: Bell + Profile */}
+        <div className="flex items-center gap-4">
+            
+            {/* Notification Bell with Glow Effect */}
+            <div className="relative group">
+                <div className="p-2 bg-gray-800 rounded-full border border-gray-700 
+                                transition-all duration-300 cursor-pointer flex items-center justify-center
+                                group-hover:bg-gray-700 group-hover:border-yellow-500/50 
+                                group-hover:shadow-[0_0_15px_rgba(234,179,8,0.3)]">
+                    <NotificationBell currentUser={currentUser} />
+                </div>
+            </div>
+
+            {/* Profile Icon */}
+            <div className="relative group">
+                <button 
+                    onClick={() => navigate('/profile')} 
+                    className="p-2 bg-gray-800 rounded-full text-indigo-400 border border-gray-700
+                               transition-all duration-300 shadow-md flex items-center justify-center
+                               hover:bg-gray-750 hover:text-indigo-300 hover:border-indigo-500/50 
+                               hover:shadow-[0_0_15px_rgba(99,102,241,0.3)]"
+                >
+                    <UserCircle size={34} />
+                </button>
+                <span className="absolute top-full right-0 mt-2 px-3 py-1 text-xs font-medium text-white bg-gray-700 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                    My Profile
+                </span>
+            </div>
         </div>
       </div>
 
       <LeaderboardCard />
 
-      {/* Grid Layout: 1 col mobile, 2 col laptop */}
+      {/* Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <NavCard 
           title="Request Help" 
@@ -73,7 +84,6 @@ const Home = () => {
           to="/tasks" 
           color="bg-emerald-500"
         />
-        {/* Changed from Profile to My Requests */}
         <NavCard 
           title="My Requests" 
           desc="Track your active orders" 
