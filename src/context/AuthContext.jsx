@@ -25,6 +25,9 @@ export const AuthProvider = ({ children }) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     await sendEmailVerification(res.user);
   
+    // FIX: Define a consistent time string to avoid "timestamp is not defined" error
+    const now = new Date().toISOString(); 
+
     // Save form data to Firestore immediately (unverified)
     await setDoc(doc(db, "users", res.user.uid), {
       uid: res.user.uid,
@@ -32,14 +35,14 @@ export const AuthProvider = ({ children }) => {
       fullName,
       phone,
       verified: false,
-      createdAt: new Date(),
-      credits : 0,
+      createdAt: now, // FIX: Use string instead of raw Date object for safety
+      credits: 50,
       requested: 0,
       helped: 0,
       lastKnownLocation: {
         lat: 12.96,
         lng: 77.60,
-        updatedAt: timestamp
+        updatedAt: now // FIX: Replaced undefined 'timestamp' with 'now'
       },
       locationPermission: "granted",
     });
@@ -53,11 +56,10 @@ export const AuthProvider = ({ children }) => {
   
     if (!res.user.emailVerified) {
       await signOut(auth);
-      alert("Please verify your email before logging in.");
-      return null;
+      // Changed alert to throw Error so your UI can catch and display it properly
+      throw new Error("Please verify your email before logging in.");
     }
 
-  
     // Update verified flag only
     const userRef = doc(db, "users", res.user.uid);
     await setDoc(userRef, { verified: true }, { merge: true });
@@ -67,14 +69,24 @@ export const AuthProvider = ({ children }) => {
   
 
   // LOGOUT
-  const logout = () => signOut(auth);
+  const logout = async () => {
+    // FIX: Clear the "Rulebook Accepted" flag so it shows again for the next login
+    sessionStorage.removeItem('hasAcceptedRules'); 
+    await signOut(auth);
+  };
 
   // AUTH STATE LISTENER
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser && firebaseUser.emailVerified) {
         const snap = await getDoc(doc(db, "users", firebaseUser.uid));
-        setUser({ uid: firebaseUser.uid, ...snap.data(), verified: true });
+        
+        // Safety check in case firestore doc doesn't exist yet
+        if (snap.exists()) {
+             setUser({ uid: firebaseUser.uid, ...snap.data(), verified: true });
+        } else {
+             setUser({ uid: firebaseUser.uid, email: firebaseUser.email, verified: true });
+        }
       } else {
         setUser(null);
       }

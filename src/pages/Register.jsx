@@ -16,7 +16,7 @@ const Register = () => {
     e.preventDefault();
     try {
       await register(email, password, fullName, phone);
-      alert("Verification email sent! Please verify before logging in.");
+      alert("Verification email sent! Please verify before logging in [Check spam folder too!]");
       navigate("/"); // send them back to login page
     } catch (err) {
       alert(err.message);

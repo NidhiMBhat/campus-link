@@ -54,6 +54,10 @@ const MyRequests = () => {
     try {
       await completeTask(task, "requester");
       alert("Task completed! Credits transferred.");
+      
+      // --- FIX: Remove from list immediately so button vanishes ---
+      setRequests(prev => prev.filter(t => t.id !== task.id));
+      
       setActiveRequest(null);
     } catch (err) {
       alert(err.message);
@@ -127,8 +131,7 @@ const MyRequests = () => {
                   </span>
                 </div>
 
-                {/* Details Section - LAYOUT KEPT EXACTLY AS REQUESTED */}
-                {/* Just updated bg color to black/20 to fit the glass theme */}
+                {/* Details Section */}
                 <div className="bg-black/20 rounded-xl p-4 space-y-3 mb-6 border border-white/5">
                   <div className="flex items-center text-gray-300 text-sm">
                     <MapPin size={16} className="text-indigo-400 mr-2" />

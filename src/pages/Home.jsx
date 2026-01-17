@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlusCircle, List, UserCircle, CheckSquare, Clock } from 'lucide-react'; 
 import NavCard from '../components/NavCard';
 import LeaderboardCard from '../components/LeaderboardCard';
@@ -6,14 +6,71 @@ import { useNavigate } from 'react-router-dom';
 import { requestAndStoreLocation } from "../services/location";
 import { checkNearbyRequests } from "../services/notifications";
 import NotificationBell from "../components/NotificationBell";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore"; // Import Firestore methods
+import RuleBookModal from '../components/RuleBookModal';
 
 const Home = () => {
   const navigate = useNavigate();
   const currentUser = auth.currentUser;
-    
+  
+  // State defaults to FALSE so we don't show it until we verify with DB
+  const [showRules, setShowRules] = useState(false); 
+
+  // Function to handle the permanent acceptance
+  const handleAcceptRules = async () => {
+    if (!currentUser) return;
+    try {
+      // 1. Update Firestore permanently
+      const userRef = doc(db, "users", currentUser.uid);
+      await updateDoc(userRef, {
+        hasAcceptedRules: true
+      });
+      // 2. Hide Modal locally
+      setShowRules(false);
+    } catch (error) {
+      console.error("Error saving rule acceptance:", error);
+      // Fallback: hide it anyway so user isn't stuck
+      setShowRules(false);
+    }
+  };
+
   useEffect(() => {
     if (!currentUser) return;
+
+    // --- CHECK USER STATUS (Rules & Credits) ---
+    const checkUserProfile = async () => {
+      try {
+        const userRef = doc(db, "users", currentUser.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+
+          // Check 1: Have they accepted rules yet?
+          // If 'hasAcceptedRules' is undefined or false, show the modal
+          if (!userData.hasAcceptedRules) {
+            setShowRules(true);
+          }
+
+          // Check 2: Do they have their starting credits? (Safety check for old users)
+          if (userData.credits === undefined) {
+             // If credits are missing, assign default 50
+             await updateDoc(userRef, { credits: 50 });
+          } else if (userData.credits === 0) {
+             // If credits are 0, check if they are brand new (no history)
+             if ((userData.helped || 0) === 0 && (userData.requested || 0) === 0) {
+                await updateDoc(userRef, { credits: 50 });
+             }
+          }
+        }
+      } catch (err) {
+        console.error("Profile check failed:", err);
+      }
+    };
+    
+    checkUserProfile();
+    // -------------------------------------------
 
     requestAndStoreLocation(currentUser);
     (async () => {
@@ -21,13 +78,19 @@ const Home = () => {
       console.log("Nearby requests check done", result);
     })();
       
-    checkNearbyRequests(currentUser);
+    // checkNearbyRequests(currentUser);
   }, [currentUser]);
 
   return (
     // Added relative to manage z-index of glows
     <div className="min-h-screen p-6 pb-20 max-w-4xl mx-auto relative">
       
+      {/* --- RULEBOOK MODAL --- */}
+      {/* Shows only if DB says hasAcceptedRules: false */}
+      {showRules && (
+        <RuleBookModal onAccept={handleAcceptRules} />
+      )}
+
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div>
