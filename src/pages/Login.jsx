@@ -3,36 +3,68 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
+// --- NEW IMPORTS ---
+import { signInWithEmailAndPassword } from 'firebase/auth'; // Import direct sign-in
+import { auth } from '../firebase'; // Import auth instance
+
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login } = useAuth(); // We still use this for students
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // --- ADMIN CREDENTIALS ---
+  const ADMIN_EMAIL = "admin@campuslink.com";
+  // Updated to match your password
+  const ADMIN_DEFAULT_PASS = "power123!"; 
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Optional: frontend regex check
-    const collegeRegex = /^[a-zA-Z0-9._%+-]+@rvce\.edu\.in$/;
-    if (!collegeRegex.test(email)) {
-      alert("Please use a valid @rvce.edu.in email");
-      return;
-    }
-
     try {
-      const res = await login(email, password); // calls Firebase
-      if (!res) {
-        // login failed or email unverified
+      // ---------------------------------------------------------
+      // 1. ADMIN LOGIN (Bypasses Regex & Verification Checks)
+      // ---------------------------------------------------------
+      if (email === ADMIN_EMAIL) {
+        if (password !== ADMIN_DEFAULT_PASS) {
+            alert("Invalid Admin Password");
+            return;
+        }
+        
+        // FIX: Use direct Firebase Login here to bypass the "Email Verified?" check
+        // inside your AuthContext.js
+        await signInWithEmailAndPassword(auth, email, password);
+        
+        console.log("Admin logged in, redirecting...");
+        navigate('/admin'); // Redirect to Admin Panel
         return;
       }
-      if (!res.user.emailVerified) {
-        alert("Please verify your email before logging in.");
+
+      // ---------------------------------------------------------
+      // 2. STANDARD STUDENT LOGIN (Strict Rules Apply)
+      // ---------------------------------------------------------
+      
+      // The Regex Check is here, so it ONLY applies if you are NOT the admin
+      const collegeRegex = /^[a-zA-Z0-9._%+-]+@rvce\.edu\.in$/;
+      if (!collegeRegex.test(email)) {
+        alert("Please use a valid @rvce.edu.in email");
         return;
       }
+
+      // Use the Context login for students (which enforces email verification)
+      const res = await login(email, password); 
+      
+      if (!res) return;
 
       navigate('/home');
+
     } catch (err) {
-      alert(err.message);
+      console.error(err);
+      if(err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
+          alert("Invalid Email or Password");
+      } else {
+          alert(err.message); // Shows specific errors like "Verify your email"
+      }
     }
   };
 

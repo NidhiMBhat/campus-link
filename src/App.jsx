@@ -7,7 +7,7 @@ import RequestTask from './pages/RequestTask';
 import Tasks from './pages/Tasks';
 import MyTasks from './pages/MyTasks';
 import MyRequests from './pages/MyRequests'; // <--- 1. Make sure this import is here!
-
+import AdminPanel from './pages/AdminPanel';
 function App() {
   return (
     <div className="min-h-screen w-full bg-gray-900 text-white">
@@ -19,7 +19,7 @@ function App() {
         <Route path="/request" element={<RequestTask />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/my-tasks" element={<MyTasks />} />
-        
+        <Route path="/admin" element={<AdminPanel />} />
    
         <Route path="/my-requests" element={<MyRequests />} /> 
       </Routes>
