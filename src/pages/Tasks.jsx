@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Coffee, MapPin, Clock, ArrowRight, CheckCircle } from "lucide-react"; // Added CheckCircle
+import { ArrowLeft, Coffee, MapPin, Clock, ArrowRight, CheckCircle } from "lucide-react"; 
 import { auth, db } from "../firebase";
 import {
   collection,
@@ -17,7 +17,7 @@ const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // NEW STATE: Controls the success popup
+  // Controls the success popup
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const currentUserId = auth.currentUser?.uid;
@@ -52,18 +52,38 @@ const Tasks = () => {
     if (!user) return;
     
     try {
-      // 1. Check if the helper already has an active task
+      // 1. Get ALL currently active tasks for this helper
       const activeTaskQuery = query(
         collection(db, "requests"),
         where("helperId", "==", user.uid),
         where("status", "==", "accepted")
       );
       const activeTaskSnap = await getDocs(activeTaskQuery);
-      
-      if (!activeTaskSnap.empty) {
-        alert("You can only accept one task at a time. Please complete your current task first.");
-        return;
+      const activeTasks = activeTaskSnap.docs.map(d => d.data());
+
+      // --- STRICT POOLING LOGIC START ---
+      // If user already has active tasks, apply strict rules
+      if (activeTasks.length > 0) {
+        const currentBatchSource = activeTasks[0].source?.name; 
+        const currentBatchDest = activeTasks[0].dest?.name; 
+        
+        // Rule A: Max Limit (e.g., 3 tasks max)
+        if (activeTasks.length >= 3) {
+           alert("Pool full! You can only pool up to 3 tasks at a time.");
+           return;
+        }
+
+        // Rule B: EXACT Route Matching (Source AND Destination must match)
+        // This prevents helpers from accepting tasks going to different locations
+        const isSameSource = task.source?.name === currentBatchSource;
+        const isSameDest = task.dest?.name === currentBatchDest;
+
+        if (!isSameSource || !isSameDest) {
+           alert(`Pooling Restriction: You are currently doing a run from "${currentBatchSource}" to "${currentBatchDest}". \n\nTo ensure efficiency, you can only pool tasks that follow this EXACT same route.`);
+           return;
+        }
       }
+      // --- POOLING LOGIC END ---
 
       // 2. Update Firestore
       await updateDoc(doc(db, "requests", task.id), {
@@ -80,7 +100,7 @@ const Tasks = () => {
         try {
             await createNotification({
               userId: task.requesterId,
-              message: "Your request was accepted",
+              message: "Your request was accepted (Pooled Delivery)!",
               requestId: task.id,
             });
         } catch (notifErr) {
