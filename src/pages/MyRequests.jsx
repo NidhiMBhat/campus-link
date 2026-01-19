@@ -9,6 +9,7 @@ import {
   Trash2,
   CheckCircle,
   Phone,
+  AlertCircle
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
@@ -24,6 +25,13 @@ const MyRequests = () => {
   const [activeRequest, setActiveRequest] = useState(null);
   const [processingId, setProcessingId] = useState(null);
 
+  const isExpired = (createdAt, timeStr) => {
+    if (!createdAt) return false;
+    const val = parseInt(timeStr);
+    const durationMs = timeStr.includes("Hour") ? val * 3600000 : val * 60000;
+    return Date.now() > createdAt.toMillis() + durationMs;
+  };
+  
   useEffect(() => {
     const saved = localStorage.getItem("my_active_request");
     if (saved) {
@@ -102,7 +110,9 @@ const MyRequests = () => {
           </div>
         ) : requests.length > 0 ? (
           <div className="space-y-6 animate-fade-in pb-20">
-            {requests.map(task => (
+            {requests.map(task => {
+              const expired = task.status === "pending" && isExpired(task.createdAt, task.time);
+              return (
               <div
                 key={task.id}
                 // GLASSMORPHISM CARD STYLE
@@ -122,6 +132,18 @@ const MyRequests = () => {
                       ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30' 
                       : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
                   }`}>
+                    {expired ? <AlertCircle size={12} /> : task.status === 'accepted' ? <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></div> : <Loader2 size={12} className="animate-spin" />}
+                      {expired ? "Expired" : task.status}
+                    
+                  {/* Expiration Message */}
+                  {expired && (
+                    <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl mb-4">
+                      <p className="text-red-300 text-sm">
+                        No one accepted this task within the requested time frame.
+                      </p>
+                    </div>
+                  )}
+                  
                     {task.status === 'accepted' ? (
                         <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></div>
                     ) : (
@@ -197,11 +219,12 @@ const MyRequests = () => {
                     onClick={() => handleCancel(task.id)}
                     className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/10 hover:border-red-500/30 text-red-400 px-4 py-2.5 rounded-xl transition text-sm font-medium"
                   >
-                    <Trash2 size={16} /> Cancel
+                    <Trash2 size={16} /> {expired ? "Remove" : "Cancel"}
                   </button>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           /* Empty State - Enhanced */

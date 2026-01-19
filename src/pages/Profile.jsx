@@ -56,43 +56,79 @@ const Profile = () => {
   if (!profileData) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
 
   return (
-    <div className="min-h-screen p-6 max-w-2xl mx-auto flex flex-col">
-      <button onClick={() => navigate('/home')} className="mb-6 flex items-center text-gray-400 hover:text-white transition">
-        <ArrowLeft size={20} className="mr-2" /> Back to Dashboard
-      </button>
-
-      <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 text-center mb-6 shadow-xl">
-        <UserCircle size={80} className="mx-auto text-indigo-400 mb-4" />
-        <h2 className="text-2xl font-bold text-white">{profileData.fullName}</h2>
-        <p className="text-gray-400">{profileData.email}</p>
-        <p className="text-gray-500 text-sm mt-1">{profileData.phone}</p>
-      </div>
-
-      {/* Stats Grid - Using the queried counts */}
-      <div className="grid grid-cols-3 gap-3 text-center mb-6">
-        <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
-          <Star className="mx-auto text-yellow-400 mb-2" size={24} />
-          <h3 className="text-xl font-bold text-white">{profileData.credits || 0}</h3>
-          <p className="text-xs text-gray-400 uppercase tracking-wide">Credits</p>
+    <div className="min-h-screen p-6 bg-[#1a1a1a] bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]">
+      <div className="max-w-2xl mx-auto mc-panel p-6 sm:p-10 relative">
+        
+        {/* Navigation - Top Bar */}
+        <div className="flex justify-between items-center mb-10">
+          <button 
+            onClick={() => navigate('/home')} 
+            className="mc-button px-6 py-2 flex items-center gap-2"
+          >
+            <span>{"<"}</span> 
+            <span className="hidden sm:inline text-sm">Back to Menu</span>
+          </button>
+          
+         
         </div>
-        <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
-          <Activity className="mx-auto text-blue-400 mb-2" size={24} />
-          <h3 className="text-xl font-bold text-white">{stats.requested}</h3>
-          <p className="text-xs text-gray-400 uppercase tracking-wide">Requested</p>
-        </div>
-        <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
-          <Activity className="mx-auto text-emerald-400 mb-2" size={24} />
-          <h3 className="text-xl font-bold text-white">{stats.helped}</h3>
-          <p className="text-xs text-gray-400 uppercase tracking-wide">Helped</p>
-        </div>
-      </div>
 
-      
+        {/* Character Info Panel */}
+        <div className="bg-[#313131] border-4 border-black p-6 mb-8 shadow-[inset_-4px_-4px_#1e1e1e,inset_4px_4px_#5a5a5a]">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            
+            {/* Avatar Block */}
+            <div className="w-24 h-24 bg-[#8B8B8B] border-4 border-black flex items-center justify-center shadow-[inset_-4px_-4px_#5a5a5a]">
+              <UserCircle size={64} className="text-[#C6C6C6]" />
+            </div>
 
-      <div className="mt-auto">
-        <button onClick={handleLogout} className="w-full bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-900/50 font-bold py-3 rounded-xl transition flex items-center justify-center gap-3">
-          <LogOut size={22} /> Logout
-        </button>
+            {/* Stats / Lore Text */}
+            <div className="text-center md:text-left space-y-1">
+              <h2 className="text-3xl font-bold text-[#ffffff] [text-shadow:3px_3px_#000]">
+                {profileData.fullName}
+              </h2>
+              
+              <div className="flex flex-col gap-1 pt-2">
+                <p className="text-[#aaa] text-sm flex items-center justify-center md:justify-start gap-2">
+                   <span className="text-indigo-400 font-bold">Email:</span>
+                   {profileData.email}
+                </p>
+                <p className="text-[#aaa] text-sm flex items-center justify-center md:justify-start gap-2">
+                   <span className="text-indigo-400 font-bold">Phone:</span>
+                   {profileData.phone}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Inventory Slots (Stats) */}
+        <p className="text-[#555] mb-2 uppercase text-xs font-bold tracking-widest">Player Statistics</p>
+        <div className="grid grid-cols-3 gap-4 mb-10">
+          {[
+            { label: 'Credits', val: profileData.credits, color: 'text-yellow-400' },
+            { label: 'Requests', val: stats.requested, color: 'text-blue-400' },
+            { label: 'Helped', val: stats.helped, color: 'text-[#39ff14]' }
+          ].map((item) => (
+            <div key={item.label} className="bg-[#8B8B8B] border-4 border-black shadow-[inset_-4px_-4px_#5A5A5A] p-4 flex flex-col items-center justify-center hover:bg-[#999] transition-colors">
+              <span className={`text-2xl font-bold ${item.color} [text-shadow:2px_2px_#000]`}>
+                {item.val}
+              </span>
+              <span className="text-[10px] text-white uppercase mt-1">{item.label}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="space-y-4">
+          
+          
+          <button 
+            onClick={handleLogout}
+            className="w-full mc-button py-4 bg-[#a32222] hover:bg-[#c42c2c] border-black text-white"
+          >
+            Save & Quit
+          </button>
+        </div>
       </div>
     </div>
   );

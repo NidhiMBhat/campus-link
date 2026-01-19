@@ -22,6 +22,12 @@ const Tasks = () => {
 
   const currentUserId = auth.currentUser?.uid;
 
+  const getDurationMs = (timeStr) => {
+    const val = parseInt(timeStr);
+    if (timeStr.includes("Hour")) return val * 60 * 60 * 1000;
+    return val * 60 * 1000; // default to minutes
+  };
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -29,12 +35,22 @@ const Tasks = () => {
           collection(db, "requests"),
           where("status", "==", "pending")
         );
-
+        const now = Date.now();
         const snap = await getDocs(q);
         const fetchedTasks = snap.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
-        }));
+        }))
+        .filter((task) => {
+            // If there's no timestamp, keep it (safety)
+            if (!task.createdAt) return true;
+
+            const createdTime = task.createdAt.toMillis();
+            const expiryDuration = getDurationMs(task.time);
+            
+            // Return true only if current time is less than creation + duration
+            return now < createdTime + expiryDuration;
+          });
 
         setTasks(fetchedTasks);
       } catch (err) {
@@ -50,7 +66,14 @@ const Tasks = () => {
   const handleAcceptTask = async (task) => {
     const user = auth.currentUser;
     if (!user) return;
-    
+
+    const now = Date.now() ;
+    const expiryTime = task.createdAt.toMillis() + getDurationMs(task.time);
+    if (now > expiryTime) {
+      alert("This task has expired and is no longer available.");
+      setTasks((prev) => prev.filter((t) => t.id !== task.id));
+      return;
+    }
     try {
       // 1. Get ALL currently active tasks for this helper
       const activeTaskQuery = query(
@@ -216,11 +239,11 @@ const Tasks = () => {
                     <span className="text-gray-500">To:</span> 
                     <span className="text-gray-200">{task.dest?.name}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-gray-400 bg-gray-800/30 p-3 rounded-xl border border-white/5 hover:bg-gray-800/50 transition-colors">
-                    <Clock size={16} className="text-orange-400" /> 
-                    <span className="text-gray-500">Within:</span> 
-                    <span className="text-gray-200">{task.time}</span>
-                  </div>
+                  <div className="flex items-center gap-2 text-amber-400">
+                  <Clock size={16} /> 
+                  <span className="text-gray-500">Expires in:</span> 
+                  {Math.round(((task.createdAt.toMillis() + getDurationMs(task.time)) - Date.now()) / 60000)} mins
+                </div>
                 </div>
 
                 {task.requesterId !== currentUserId ? (
