@@ -9,9 +9,10 @@ import { auth } from '../firebase'; // Import auth instance
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); // We still use this for students
+  const { login, forgotPassword } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
 
   // --- ADMIN CREDENTIALS ---
   const ADMIN_EMAIL = "admin@campuslink.com";
@@ -67,6 +68,27 @@ const Login = () => {
       }
     }
   };
+  const handleForgotPassword = async () => {
+    if (!email) {
+      alert("Please enter your college email first.");
+      return;
+    }
+  
+    const collegeRegex = /^[a-zA-Z0-9._%+-]+@rvce\.edu\.in$/;
+    if (!collegeRegex.test(email)) {
+      alert("Please use a valid @rvce.edu.in email");
+      return;
+    }
+  
+    try {
+      await forgotPassword(email);
+      alert("If an account exists, a password reset link has been sent.");
+    } catch (err) {
+      console.error(err);
+      alert("If an account exists, a password reset link has been sent.");
+    }
+  };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -106,6 +128,16 @@ const Login = () => {
               />
             </div>
           </div>
+          <div className="text-right">
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              className="text-sm text-indigo-400 hover:text-indigo-300"
+            >
+              Forgot password?
+            </button>
+          </div>
+
 
           <button 
             type="submit" 

@@ -6,6 +6,7 @@ import {
   signOut,
   onAuthStateChanged,
   sendEmailVerification,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
@@ -14,6 +15,10 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const forgotPassword = (email) => {
+    return sendPasswordResetEmail(auth, email);
+  };
 
   // REGISTER
   const register = async (email, password, fullName, phone) => {
@@ -110,7 +115,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, register, login, logout }}>
+    <AuthContext.Provider value={{ user, register, login, logout, forgotPassword }}>
       {!loading && children}
     </AuthContext.Provider>
   );
