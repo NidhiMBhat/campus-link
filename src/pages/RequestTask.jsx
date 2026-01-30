@@ -194,8 +194,9 @@ const RequestTask = () =>
               className="w-full bg-gray-900 border border-gray-700 text-white p-3 rounded-xl"
             >
               <option>Getting Printouts</option>
-              <option>Food Delivery (Canteen)</option>
+              <option>Food Delivery</option>
               <option>Pick up from Gate</option>
+              <option>Item handover</option>
               <option>Other</option>
             </select>
           </div>
@@ -258,6 +259,10 @@ const RequestTask = () =>
             <option>1 Hour</option>
 
           </select>
+          <p className="mt-3 text-xs text-yellow-400/80 leading-relaxed">
+            ⚠ Credits are estimated using location distance and urgency.
+            Real-world effort or routes may differ.
+          </p>
 
           <div className="bg-gray-900/50 p-4 rounded-xl border border-gray-700">
             <div className="flex justify-between items-center mb-4">

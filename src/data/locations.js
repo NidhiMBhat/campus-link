@@ -1,8 +1,21 @@
 export const CAMPUS_LOCATIONS = [
     { name: "Main Gate", lat: 12.9237, lng: 77.4983 },
     { name: "RVU F Block", lat: 12.9232, lng: 77.4971 },
-    { name: "Mingos Xerox", lat: 12.9240, lng: 77.4989 },
-    { name: "Canteen", lat: 12.9228, lng: 77.4965 },
+    { name: "Mingos", lat: 12.9240, lng: 77.4989 },
+    { name: "Charvi Xerox", lat: 12.9250, lng: 77.4988 },
     { name: "Library", lat: 12.9245, lng: 77.4978 },
+    { name: "Old MM Foods", lat: 12.9236, lng: 77.4998},
+    { name: "Mechanical PG Block", lat: 12.9236, lng: 77.4983},
+    { name: "CSE Department", lat: 12.9244, lng: 77.5001},
+    { name: "EEE Department", lat: 12.9243, lng: 77.5000},
+    { name: "IEM Auditorium", lat: 12.9231, lng: 77.4985},
+    { name: "ECE Department", lat: 12.9239, lng: 77.4999},
+    { name: "ETE Department", lat: 12.9237, lng: 77.5001},
+    { name: "Design Thinking Huddle (DTH)", lat: 12.9236, lng: 77.4979},
+    { name: "Central Computing Hub (CCH)", lat: 12.9228, lng: 77.4993},
+    { name: "Biotechnology Quadrangle", lat: 12.9227, lng: 77.4986},
+    { name: "Krishna Hostel", lat: 12.9241, lng: 77.5004},
+    { name: "Cauvery Hostel", lat: 12.9239, lng: 77.5009},
+    { name: "DJ Hostel", lat: 12.9231, lng: 77.5027},
   ];
   
