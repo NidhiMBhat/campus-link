@@ -50,141 +50,151 @@ const MyTasks = () => {
   };
 
   return (
-    // MAIN CONTAINER
-    <div className="min-h-screen w-full relative">
+    // MAIN CONTAINER: Dark Cubes Background
+    <div className="min-h-screen w-full font-mono bg-[#111] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
       
-      {/* 1. FIXED BACKGROUND LAYER */}
-      <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-[#050505]"></div>
-
       {/* 2. CONTENT CONTAINER */}
       <div className="p-6 max-w-2xl mx-auto flex flex-col">
+        {/* Back Button */}
         <button
           onClick={() => navigate("/home")}
-          className="mb-8 flex items-center text-gray-400 hover:text-white transition group w-fit"
+          className="mb-8 flex items-center text-white hover:text-yellow-400 transition group w-fit"
         >
-          <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" /> Back
+          <div className="bg-[#555] p-1 border-2 border-black group-active:translate-y-1 mr-2">
+             <ArrowLeft size={20} />
+          </div>
+          <span className="uppercase font-bold tracking-widest text-xs shadow-black drop-shadow-md">Back to Menu</span>
         </button>
 
+        {/* Header */}
         <div className="mb-8">
-            <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400">
-                Tasks I'm Helping With
+            <h1 className="text-3xl font-bold uppercase tracking-widest text-[#FCD34D] [text-shadow:3px_3px_#000]">
+                My Jobs
             </h1>
-            <p className="text-gray-400 mt-2">Manage your accepted commitments.</p>
+            <div className="bg-[#00000080] px-2 py-1 mt-2 inline-block border-l-4 border-[#555]">
+                <p className="text-gray-300 text-xs font-bold uppercase tracking-wide">
+                    Tasks you have accepted
+                </p>
+            </div>
         </div>
 
         {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
-                <div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mb-4"></div>
-                <p className="text-gray-400 text-sm">Loading your tasks...</p>
+                <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-none animate-spin mb-4"></div>
+                <p className="text-gray-400 text-sm font-bold uppercase">Loading Inventory...</p>
             </div>
         ) : tasks.length > 0 ? (
-          <div className="space-y-6 animate-fade-in pb-20">
+          <div className="space-y-6 pb-20">
             {tasks.map(task => (
               <div 
                 key={task.id} 
-                // GLASSMORPHISM CARD STYLE
-                className="group relative bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-3xl hover:border-indigo-500/30 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1"
+                // MINECRAFT CARD: Stone Panel
+                className="relative bg-[#C6C6C6] border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1"
               >
                 {/* Header */}
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h2 className="text-xl font-bold text-white group-hover:text-indigo-200 transition-colors">
+                    <h2 className="text-lg font-bold text-[#333] uppercase tracking-wide mb-1">
                         {task.type}
                     </h2>
-                    <p className="text-gray-400 text-sm mt-1 font-light leading-relaxed">
-                        {task.desc}
+                    <p className="text-[#555] text-xs font-bold font-mono border-l-2 border-[#777] pl-2 leading-relaxed">
+                        "{task.desc}"
                     </p>
                   </div>
-                  <span className="bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
+                  
+                  {/* Status Badge */}
+                  <div className="bg-[#3c8527] border-2 border-black px-2 py-1 text-white text-[10px] font-bold uppercase tracking-widest shadow-[2px_2px_0px_#000]">
                     {task.status}
-                  </span>
+                  </div>
                 </div>
 
-                {/* Requester Contact Info - Styled as "Active Connection" */}
-                <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-5 mb-6 space-y-4 backdrop-blur-sm">
-                  <div className="flex justify-between items-center">
+                {/* Requester Contact Info - Styled as "Iron Panel" */}
+                <div className="bg-[#A2B9C4] border-2 border-black p-4 mb-6 shadow-[2px_2px_0px_#000]">
+                  <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-300">
-                             <Phone size={18} />
+                        <div className="w-10 h-10 border-2 border-black bg-[#5D737E] flex items-center justify-center text-white shadow-[inset_2px_2px_0px_#A2B9C4]">
+                             <Phone size={20} />
                         </div>
                         <div>
-                            <p className="text-indigo-200 text-[10px] uppercase font-bold tracking-wider">Requester Details</p>
-                            <p className="text-white font-medium">{task.requesterName}</p>
-                            <p className="text-indigo-300/70 text-xs">{task.requesterPhone || "No phone provided"}</p>
+                            <p className="text-[#333] text-[10px] uppercase font-bold tracking-wider">Requester</p>
+                            <p className="text-black font-bold text-sm uppercase">{task.requesterName}</p>
+                            <p className="text-[#555] text-xs font-mono">{task.requesterPhone || "No Phone"}</p>
                         </div>
                     </div>
                     {task.requesterPhone && (
                       <a 
                         href={`tel:${task.requesterPhone}`} 
-                        className="bg-indigo-600 p-3 rounded-xl hover:bg-indigo-500 transition shadow-lg shadow-indigo-600/20 active:scale-95"
+                        className="bg-[#3c8527] p-2 border-2 border-black hover:bg-[#4ca633] transition active:translate-y-1 shadow-[2px_2px_0px_#000]"
                       >
                         <Phone size={18} className="text-white" />
                       </a>
                     )}
                   </div>
                   
-                  <div className="border-t border-white/10 pt-4 space-y-3">
-                    <div className="flex items-center text-sm text-gray-300">
-                      <MapPin size={16} className="mr-2.5 text-indigo-400" /> 
-                      <span className="text-gray-500 mr-1">From:</span> {task.source?.name}
+                  {/* Location Details */}
+                  <div className="bg-[#8B8B8B] border-2 border-black p-3 space-y-2 shadow-[inset_3px_3px_0px_#373737,inset_-2px_-2px_0px_#FFF]">
+                    <div className="flex items-center text-xs font-bold font-mono text-white">
+                      <MapPin size={14} className="mr-2 text-[#FCD34D]" /> 
+                      <span className="text-[#DDD] mr-1 uppercase">From:</span> {task.source?.name}
                     </div>
-                    <div className="flex items-center text-sm text-gray-300">
-                      <MapPin size={16} className="mr-2.5 text-emerald-400" /> 
-                      <span className="text-gray-500 mr-1">To:</span> {task.dest?.name}
+                    <div className="flex items-center text-xs font-bold font-mono text-white">
+                      <MapPin size={14} className="mr-2 text-[#39ff14]" /> 
+                      <span className="text-[#DDD] mr-1 uppercase">To:</span> {task.dest?.name}
                     </div>
                   </div>
                 </div>
 
-                {/* Helper Confirmation Button */}
+                {/* Helper Confirmation Button (Emerald) */}
                 <button
                   onClick={() => handleCompleteSignal(task)}
                   disabled={task.helperConfirmed || processingId === task.id}
-                  className={`w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg ${
-                    task.helperConfirmed 
-                    ? "bg-gray-700/50 text-gray-400 cursor-not-allowed border border-gray-600" 
-                    : "bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white shadow-indigo-600/20 active:scale-[0.98]"
-                  }`}
+                  className={`w-full py-3 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all border-4 border-black
+                    ${task.helperConfirmed 
+                      ? "bg-[#555] text-gray-400 cursor-not-allowed shadow-none" 
+                      : "bg-[#3c8527] text-white shadow-[inset_4px_4px_0px_0px_#5cbd38,inset_-4px_-4px_0px_0px_#1e4513] hover:bg-[#4ca633] active:translate-y-1"
+                    }`}
                 >
                   {processingId === task.id ? (
                     <Loader2 className="animate-spin" size={20} />
                   ) : task.helperConfirmed ? (
-                    <> <CheckCircle size={20} /> Waiting for Requester...</>
+                    <> <CheckCircle size={16} /> Waiting for Requester...</>
                   ) : (
                     "Confirm I've Delivered"
                   )}
                 </button>
 
                 {task.requesterConfirmed && !task.helperConfirmed && (
-                  <div className="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-lg flex items-center justify-center gap-2 mt-4 animate-pulse">
-                     <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                     <p className="text-xs text-emerald-200 font-medium">
-                       The requester has confirmed receipt! Click the button above to finish.
-                     </p>
+                  <div className="bg-[#FCD34D] border-2 border-black p-2 flex items-center justify-center gap-2 mt-4 animate-pulse">
+                      <div className="w-2 h-2 bg-black"></div>
+                      <p className="text-xs text-black font-bold uppercase tracking-wide">
+                        Requester confirmed receipt! Click above to finish.
+                      </p>
                   </div>
                 )}
 
-                <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
-                  <span className="text-gray-500 text-xs italic">Reward on completion:</span>
-                  <span className="text-emerald-400 font-bold text-lg">{task.credits} Cr</span>
+                {/* Footer Reward */}
+                <div className="mt-4 pt-4 border-t-2 border-[#777] border-dashed flex justify-between items-center">
+                  <span className="text-[#555] text-[10px] font-bold uppercase tracking-wider">Reward</span>
+                  <span className="text-[#3c8527] font-bold text-lg">{task.credits} Cr</span>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          /* Empty State - Enhanced */
-          <div className="flex-1 flex flex-col items-center justify-center bg-white/5 backdrop-blur-sm border border-white/5 rounded-3xl p-10 text-center min-h-[400px]">
-            <div className="bg-gray-800/50 p-6 rounded-full mb-6 shadow-inner border border-white/5">
-              <FolderOpen size={48} className="text-gray-600" />
+          /* Empty State */
+          <div className="flex-1 flex flex-col items-center justify-center bg-[#C6C6C6] border-4 border-black p-10 text-center min-h-[300px] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)]">
+            <div className="bg-[#8B8B8B] p-4 border-2 border-black mb-6 shadow-[inset_3px_3px_0px_#373737,inset_-2px_-2px_0px_#FFF]">
+              <FolderOpen size={48} className="text-[#333]" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">No active tasks</h3>
-            <p className="text-gray-500 max-w-xs mx-auto mb-6">
-                You haven't accepted any errands. Go to the Tasks page to find someone to help!
+            <h3 className="text-lg font-bold text-[#333] mb-2 uppercase tracking-wide">Inventory Empty</h3>
+            <p className="text-[#555] text-xs font-bold font-mono">
+                You are not helping anyone right now.
             </p>
             <button
               onClick={() => navigate("/tasks")}
-              className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3.5 rounded-xl font-bold shadow-lg shadow-indigo-600/20 transition-all hover:-translate-y-0.5"
+              className="mt-6 bg-[#3c8527] hover:bg-[#4ca633] text-white px-6 py-3 border-4 border-black font-bold uppercase tracking-widest shadow-[inset_4px_4px_0px_0px_#5cbd38,inset_-4px_-4px_0px_0px_#1e4513] active:translate-y-1 transition-all"
             >
-              Find Tasks
+              Find a Job
             </button>
           </div>
         )}

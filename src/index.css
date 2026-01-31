@@ -1,9 +1,137 @@
 @import "tailwindcss";
 
-/* NOTE: In Tailwind v4, we remove the @apply rules for body here 
-  and add them directly to index.html (see below). 
-  This avoids the "unknown utility class" error.
-*/
+/* =========================================
+   1. MINECRAFT THEME UTILITIES (New UI)
+   ========================================= */
+
+/* The Main Background (Dark Dirt/Bedrock Texture) */
+.mc-bg {
+  /* We use a repeating dark noise pattern to look like Bedrock/Deepslate */
+  background-color: #1a1a1a;
+  background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+  min-height: 100vh;
+  padding: 1.5rem; /* p-6 */
+  color: white;
+  font-family: 'Courier New', Courier, monospace; /* Monospaced for retro feel */
+}
+
+/* The Main UI Panel (Stone GUI Style) */
+.mc-panel {
+  background-color: #C6C6C6; /* Light Grey Stone */
+  border: 4px solid #000000;
+  color: black;
+  /* 3D Bevel Effect: Light Top/Left, Dark Bottom/Right */
+  box-shadow: inset -4px -4px 0px 0px #555555, inset 4px 4px 0px 0px #FFFFFF;
+}
+
+/* The Dark Sub-Panel (Inventory Slots) */
+.mc-slot {
+  background-color: #8B8B8B; /* Darker Grey */
+  border: 4px solid #000000;
+  /* Inset Shadow: Looks "pressed in" */
+  box-shadow: inset 4px 4px 0px 0px #373737, inset -2px -2px 0px 0px #FFFFFF;
+}
+
+/* The Standard Button (Stone Button) */
+.mc-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem; /* py-3 px-6 */
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: white;
+  background-color: #5D737E; /* Stone Blue-Grey */
+  border: 4px solid #000000;
+  text-shadow: 2px 2px #000000;
+  transition: all 0.1s;
+  cursor: pointer;
+  /* 3D Button Pop-out Effect */
+  box-shadow: inset -4px -4px 0px 0px #333333, inset 4px 4px 0px 0px #A2B9C4;
+}
+
+.mc-button:hover {
+  background-color: #6D838E; /* Lighter on hover */
+}
+
+.mc-button:active {
+  transform: translateY(4px);
+  box-shadow: inset 4px 4px 0px 0px #333333; /* Pressed in look */
+}
+
+/* Danger Button (Redstone/TNT Style) */
+.mc-button-red {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  background-color: #A32222; /* Deep Red */
+  border: 4px solid #000000;
+  text-shadow: 2px 2px #000000;
+  box-shadow: inset -4px -4px 0px 0px #500000, inset 4px 4px 0px 0px #E57373;
+  transition: all 0.1s;
+}
+
+.mc-button-red:hover {
+  background-color: #C42C2C;
+}
+
+.mc-button-red:active {
+  transform: translateY(4px);
+  box-shadow: inset 4px 4px 0px 0px #500000;
+}
+
+/* Input Fields (Chat Box Style) */
+.mc-input {
+  width: 100%;
+  background-color: #000000;
+  border: 2px solid #555555;
+  padding: 0.75rem;
+  color: white;
+  font-family: 'Courier New', Courier, monospace;
+  outline: none;
+  box-shadow: inset 2px 2px 0px 0px #000000;
+}
+
+.mc-input:focus {
+  border-color: #FFFFFF; /* Highlight white when typing */
+}
+
+.mc-input::placeholder {
+  color: #6b7280; /* Gray-500 */
+}
+
+/* Table Styles (For Admin Panel) */
+.mc-table-head {
+  background-color: #8B8B8B;
+  color: white;
+  border-bottom: 4px solid #000000;
+  padding: 0.75rem;
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 0.875rem; /* text-sm */
+}
+
+.mc-table-row {
+  border-bottom: 2px solid #555555;
+  transition: background-color 0.2s;
+}
+
+.mc-table-row:hover {
+  background-color: #D6D6D6; /* Highlight row on hover */
+}
+
+.mc-table-cell {
+  padding: 0.75rem;
+  color: black;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+/* =========================================
+   2. ANIMATIONS (Preserved Logic)
+   ========================================= */
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
