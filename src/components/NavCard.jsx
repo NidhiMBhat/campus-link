@@ -1,21 +1,33 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const NavCard = ({ title, desc, icon: Icon, to, color }) => {
+const NavCard = ({ title, desc, icon: Icon, to, className }) => {
   const navigate = useNavigate();
+
+  // If no specific mc-button class is passed, default to the standard stone button
+  const buttonClass = className || "mc-button";
 
   return (
     <div 
       onClick={() => navigate(to)}
-      className="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700 
-                 cursor-pointer hover:bg-gray-750 hover:scale-[1.02] transition-all duration-200
-                 flex flex-col items-center text-center justify-center gap-3 h-full"
+      className={`${buttonClass} flex flex-col items-center text-center justify-center gap-4 h-full min-h-[180px] group`}
     >
-      <div className={`p-4 rounded-full bg-opacity-20 ${color}`}>
-        <Icon size={32} className={color.replace('bg-', 'text-')} />
+      {/* Icon Slot - Styled like an inventory square */}
+      <div className="mc-slot p-4 bg-black/20 group-hover:bg-black/10 transition-colors">
+        <Icon 
+          size={40} 
+          className="text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,0.5)]" 
+        />
       </div>
-      <h3 className="text-xl font-bold text-white">{title}</h3>
-      <p className="text-sm text-gray-400">{desc}</p>
+
+      <div className="space-y-1">
+        <h3 className="text-lg font-bold uppercase tracking-wide">
+          {title}
+        </h3>
+        <p className="text-xs opacity-80 font-medium normal-case tracking-normal">
+          {desc}
+        </p>
+      </div>
     </div>
   );
 };

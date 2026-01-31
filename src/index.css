@@ -14,7 +14,28 @@
   color: white;
   font-family: 'Courier New', Courier, monospace; /* Monospaced for retro feel */
 }
+/* Landscape Background */
+.mc-landscape-bg {
+  background: 
+    /* Dark overlay to make the UI readable */
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    /* Classic Minecraft Landscape */
+    url(https://wallpapercave.com/wp/wp4031389.jpg); 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
 
+/* Optional: Add a slight blur to the background only */
+.mc-landscape-bg::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: inherit;
+  filter: blur(4px);
+  z-index: -1;
+}
 /* The Main UI Panel (Stone GUI Style) */
 .mc-panel {
   background-color: #C6C6C6; /* Light Grey Stone */

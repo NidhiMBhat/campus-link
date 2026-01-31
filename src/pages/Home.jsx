@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PlusCircle, List, UserCircle, CheckSquare, Clock } from 'lucide-react'; 
+import { PlusCircle, List, UserCircle, CheckSquare, Clock, Sword, Map } from 'lucide-react'; 
 import NavCard from '../components/NavCard';
 import LeaderboardCard from '../components/LeaderboardCard';
 import { useNavigate } from 'react-router-dom';
@@ -8,9 +8,9 @@ import NotificationBell from "../components/NotificationBell";
 import { auth, db } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore"; 
 import RuleBookModal from '../components/RuleBookModal';
-
-// FIX: Combined all imports from notifications.js into one line here
 import { checkNearbyRequests, requestNotificationPermission } from "../services/notifications";
+
+
 
 const Home = () => {
   const navigate = useNavigate();
@@ -82,83 +82,71 @@ const Home = () => {
       
   }, [currentUser]);
 
-  return (
-    <div className="min-h-screen p-6 pb-20 max-w-4xl mx-auto relative">
+ return (
+    <div className="mc-landscape-bg min-h-screen pb-20 max-w-4xl mx-auto relative p-6">
       
-      {/* --- RULEBOOK MODAL --- */}
       {showRules && (
         <RuleBookModal onAccept={handleAcceptRules} />
       )}
 
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+      {/* Header with Minecraft Panel style */}
+      <div className="mc-panel flex justify-between items-center mb-8 p-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Hello, Student! 👋</h1>
-          <p className="text-gray-400 text-sm">What do you need help with today?</p>
+          <h1 className="text-xl font-bold text-black uppercase tracking-tight">
+            Welcome back, Player!
+          </h1>
+          <p className="text-[#555555] text-xs font-bold uppercase">
+            Select your quest...
+          </p>
         </div>
 
-        {/* Icons Container: Bell + Profile */}
-        <div className="flex items-center gap-4">
-            
-            {/* Notification Bell with Glow Effect */}
-            <div className="relative group">
-                <div className="p-2 bg-gray-800 rounded-full border border-gray-700 
-                                transition-all duration-300 cursor-pointer flex items-center justify-center
-                                group-hover:bg-gray-700 group-hover:border-yellow-500/50 
-                                group-hover:shadow-[0_0_15px_rgba(234,179,8,0.3)]">
-                    <NotificationBell currentUser={currentUser} />
-                </div>
+        <div className="flex items-center gap-2">
+            {/* Notification Slot */}
+            <div className="mc-slot p-1 flex items-center justify-center bg-[#8B8B8B] w-12 h-12">
+                <NotificationBell currentUser={currentUser} />
             </div>
 
-            {/* Profile Icon */}
-            <div className="relative group">
-                <button 
-                    onClick={() => navigate('/profile')} 
-                    className="p-2 bg-gray-800 rounded-full text-indigo-400 border border-gray-700
-                               transition-all duration-300 shadow-md flex items-center justify-center
-                               hover:bg-gray-750 hover:text-indigo-300 hover:border-indigo-500/50 
-                               hover:shadow-[0_0_15px_rgba(99,102,241,0.3)]"
-                >
-                    <UserCircle size={34} />
-                </button>
-                <span className="absolute top-full right-0 mt-2 px-3 py-1 text-xs font-medium text-white bg-gray-700 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                    My Profile
-                </span>
-            </div>
+            {/* Profile Slot */}
+            <button 
+                onClick={() => navigate('/profile')} 
+                className="mc-button p-0 w-12 h-12 flex items-center justify-center"
+            >
+                <UserCircle size={28} />
+            </button>
         </div>
       </div>
 
       <LeaderboardCard />
 
-      {/* Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Grid Layout using mc-button or mc-panel variations */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <NavCard 
           title="Request Help" 
-          desc="Need a quick errand run?" 
+          desc="Post a new bounty" 
           icon={PlusCircle} 
           to="/request" 
-          color="bg-indigo-500"
+          className="mc-button-red text-center"
         />
         <NavCard 
           title="Available Tasks" 
-          desc="Earn credits by helping others" 
-          icon={List} 
+          desc="Earn XP & Credits" 
+          icon={Sword} 
           to="/tasks" 
-          color="bg-emerald-500"
+          className="mc-button text-center"
         />
         <NavCard 
           title="My Requests" 
-          desc="Track your active orders" 
-          icon={Clock} 
+          desc="Active Bounties" 
+          icon={Map} 
           to="/my-requests" 
-          color="bg-blue-500"
+          className="mc-button text-center"
         />
         <NavCard 
           title="My Tasks" 
-          desc="Track accepted commitments" 
+          desc="Current Quests" 
           icon={CheckSquare} 
           to="/my-tasks" 
-          color="bg-orange-500"
+          className="mc-button text-center"
         />
       </div>
     </div>
