@@ -126,48 +126,45 @@ const RequestTask = () => {
 
   return (
     
-    <div className="min-h-screen p-6 font-mono bg-[#111] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+    <div className="app-canvas min-h-screen p-6 font-mono">
       
       <div className="max-w-2xl mx-auto flex flex-col">
         {/* Back Button */}
         <button
           onClick={() => navigate("/home")}
-          className="mb-6 flex items-center text-white hover:text-yellow-400 transition w-fit group"
+          className="mb-6 flex items-center text-[#3C4142] hover:text-black transition w-fit group"
         >
-          <div className="bg-[#555] p-1 border-2 border-black group-active:translate-y-1 mr-2">
+          <div className="bg-[#CBD5E1] p-1 border-2 border-[#3C4142] group-active:translate-y-1 mr-2 shadow-[2px_2px_0px_0px_#3C4142]">
             <ArrowLeft size={20} />
           </div>
-          <span className="uppercase font-bold tracking-widest text-xs shadow-black drop-shadow-md">Back to Menu</span>
+          <span className="uppercase font-black tracking-widest text-xs">Back to Menu</span>
         </button>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold uppercase tracking-widest text-[#FCD34D] [text-shadow:3px_3px_#000] mb-6 text-center md:text-left">
+        <h1 className="text-3xl font-black uppercase tracking-widest text-black mb-6 text-center md:text-left">
           Request Help
         </h1>
 
         {/* MAIN PANEL */}
-        {/* Using the floating effect and stone texture logic */}
-        <div className="bg-[#c6c6c6] w-full border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] transition-all">
+        <div className="mc-panel w-full shadow-[4px_4px_0px_0px_#3C4142] transition-all">
            
-           {/* Inner Bevel */}
-           <div className="border-t-4 border-l-4 border-white border-b-4 border-r-4 border-[#555] p-6 md:p-8">
+           {/* Inner Container */}
+           <div className="p-6 md:p-8">
 
               {viewState === "initial" && (
                 <div className="flex flex-col items-center justify-center text-center min-h-[300px]">
-                  <p className="text-[#333] font-bold max-w-xs mb-8 uppercase tracking-wide text-sm leading-relaxed">
-                    Need printouts, food, or items delivered? Post a quest for other players.
+                  <p className="text-black font-extrabold max-w-xs mb-8 uppercase tracking-wide text-sm leading-relaxed">
+                    Need printouts, food, or items delivered? Post a task for other students.
                   </p>
                   
                   {/* Create Button */}
                   <button
                     onClick={() => setViewState("form")}
-                    className="py-4 px-8 font-bold uppercase tracking-wider text-white 
-                             bg-[#3c8527] border-4 border-black 
-                             shadow-[inset_4px_4px_0px_0px_#5cbd38,inset_-4px_-4px_0px_0px_#1e4513]
-                             hover:bg-[#4ca633] active:translate-y-1 active:shadow-none transition-all
-                             text-shadow-[2px_2px_#000]"
+                    className="mc-button-green py-4 px-8 font-black uppercase tracking-wider text-black 
+                             border-4 border-[#3C4142] shadow-[4px_4px_0px_0px_#3C4142]
+                             hover:brightness-105 active:translate-y-1 active:shadow-none transition-all"
                   >
-                    Create New Quest
+                    Create New Task
                   </button>
                 </div>
               )}
@@ -179,12 +176,12 @@ const RequestTask = () => {
                 >
                   {/* Type Selection */}
                   <div>
-                    <label className="block text-xs font-bold mb-2 uppercase text-[#333]">Type of Quest</label>
+                    <label className="block text-xs font-black mb-2 uppercase text-black">Type of Task</label>
                     <select
                       name="type"
                       value={formData.type}
                       onChange={handleInputChange}
-                      className="w-full bg-[#eee] border-2 border-[#555] p-3 text-black font-mono outline-none focus:border-[#A855F7] focus:bg-white shadow-[inset_2px_2px_0px_#aaa]"
+                      className="w-full bg-white border-4 border-[#3C4142] p-3 text-black font-mono outline-none focus:border-[#B8C6A5] shadow-[inset_2px_2px_0px_#ddd]"
                     >
                       <option>Getting Printouts</option>
                       <option>Food Delivery</option>
@@ -196,14 +193,14 @@ const RequestTask = () => {
 
                   {/* Description */}
                   <div>
-                    <label className="block text-xs font-bold mb-2 uppercase text-[#333]">Description</label>
+                    <label className="block text-xs font-black mb-2 uppercase text-black">Description</label>
                     <textarea
                       name="desc"
                       rows="3"
                       placeholder="Brief description..."
                       value={formData.desc}
                       onChange={handleInputChange}
-                      className="w-full bg-[#eee] border-2 border-[#555] p-3 text-black font-mono outline-none focus:border-[#A855F7] focus:bg-white shadow-[inset_2px_2px_0px_#aaa]"
+                      className="w-full bg-white border-4 border-[#3C4142] p-3 text-black font-mono outline-none focus:border-[#B8C6A5] shadow-[inset_2px_2px_0px_#ddd]"
                       required
                     />
                   </div>
@@ -211,7 +208,7 @@ const RequestTask = () => {
                   {/* Location Selectors */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-xs font-bold mb-2 uppercase text-[#333]">Source</label>
+                        <label className="block text-xs font-black mb-2 uppercase text-black">Source</label>
                         <select
                             onChange={(e) =>
                             setFormData({
@@ -220,7 +217,7 @@ const RequestTask = () => {
                             })
                             }
                             required
-                            className="w-full bg-[#eee] border-2 border-[#555] p-3 text-black font-mono outline-none focus:border-[#A855F7] focus:bg-white shadow-[inset_2px_2px_0px_#aaa]"
+                            className="w-full bg-white border-4 border-[#3C4142] p-3 text-black font-mono outline-none focus:border-[#B8C6A5] shadow-[inset_2px_2px_0px_#ddd]"
                         >
                             <option value="">Select Location</option>
                             {CAMPUS_LOCATIONS.map(loc => (
@@ -230,7 +227,7 @@ const RequestTask = () => {
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold mb-2 uppercase text-[#333]">Destination</label>
+                        <label className="block text-xs font-black mb-2 uppercase text-black">Destination</label>
                         <select
                             onChange={(e) =>
                             setFormData({
@@ -239,7 +236,7 @@ const RequestTask = () => {
                             })
                             }
                             required
-                            className="w-full bg-[#eee] border-2 border-[#555] p-3 text-black font-mono outline-none focus:border-[#A855F7] focus:bg-white shadow-[inset_2px_2px_0px_#aaa]"
+                            className="w-full bg-white border-4 border-[#3C4142] p-3 text-black font-mono outline-none focus:border-[#B8C6A5] shadow-[inset_2px_2px_0px_#ddd]"
                         >
                             <option value="">Select Location</option>
                             {CAMPUS_LOCATIONS.map(loc => (
@@ -251,12 +248,12 @@ const RequestTask = () => {
 
                   {/* Urgency */}
                   <div>
-                    <label className="block text-xs font-bold mb-2 uppercase text-[#333]">Urgency</label>
+                    <label className="block text-xs font-black mb-2 uppercase text-black">Urgency</label>
                     <select
                         name="time"
                         value={formData.time}
                         onChange={handleInputChange}
-                        className="w-full bg-[#eee] border-2 border-[#555] p-3 text-black font-mono outline-none focus:border-[#A855F7] focus:bg-white shadow-[inset_2px_2px_0px_#aaa]"
+                        className="w-full bg-white border-4 border-[#3C4142] p-3 text-black font-mono outline-none focus:border-[#B8C6A5] shadow-[inset_2px_2px_0px_#ddd]"
                     >
                         <option>10 mins</option>
                         <option>20 mins</option>
@@ -266,11 +263,11 @@ const RequestTask = () => {
                     </select>
                   </div>
 
-                  {/* Credits Machine */}
-                  <div className="bg-[#8B8B8B] p-4 border-4 border-black shadow-[inset_4px_4px_0px_#373737,inset_-2px_-2px_0px_#FFF]">
+                  {/* Credits Section */}
+                  <div className="bg-[#CBD5E1] p-4 border-4 border-[#3C4142] shadow-[2px_2px_0px_0px_#3C4142]">
                     <div className="flex justify-between items-center mb-4">
-                      <label className="text-white font-bold text-xs uppercase shadow-black drop-shadow-md">Reward Offered</label>
-                      <span className="text-xl font-bold text-[#FCD34D] [text-shadow:2px_2px_#000]">{formData.credits} Cr</span>
+                      <label className="text-black font-black text-xs uppercase">Reward Offered</label>
+                      <span className="text-xl font-black text-black">{formData.credits} Cr</span>
                     </div>
                     
                     <input
@@ -280,10 +277,10 @@ const RequestTask = () => {
                       step="1"
                       value={formData.credits}
                       onChange={(e) => setFormData({ ...formData, credits: parseInt(e.target.value) })}
-                      className="w-full h-2 bg-black rounded-none appearance-none cursor-pointer border-2 border-[#555] accent-[#3c8527]"
+                      className="w-full h-2 bg-white rounded-none appearance-none cursor-pointer border-2 border-[#3C4142] accent-[#B8C6A5]"
                     />
                     
-                    <div className="flex justify-between text-[10px] text-white mt-2 font-bold uppercase tracking-widest">
+                    <div className="flex justify-between text-[10px] text-black mt-2 font-black uppercase tracking-widest">
                       <span>Min: {min}</span>
                       <span>Max: {max}</span>
                     </div>
@@ -294,34 +291,33 @@ const RequestTask = () => {
                     type="submit"
                     disabled={loading || formData.credits > userCredits}
                     onClick={handleSubmit}
-                    className={`w-full py-4 px-6 font-bold uppercase tracking-wider text-white border-4 border-black text-shadow-[2px_2px_#000] transition-all
+                    className={`w-full py-4 px-6 font-black uppercase tracking-wider text-black border-4 border-[#3C4142] transition-all
                       ${formData.credits > userCredits 
-                        ? "bg-[#555] cursor-not-allowed shadow-none text-gray-400" 
-                        : "bg-[#3c8527] shadow-[inset_4px_4px_0px_0px_#5cbd38,inset_-4px_-4px_0px_0px_#1e4513] hover:bg-[#4ca633] active:translate-y-1"
+                        ? "bg-[#CBD5E1] cursor-not-allowed shadow-none text-[#3C4142]" 
+                        : "mc-button-green shadow-[4px_4px_0px_0px_#3C4142] hover:brightness-105 active:translate-y-1 active:shadow-none"
                       }`}
                   >
-                    {loading ? "Processing..." : formData.credits > userCredits ? "Insufficient Credits" : "Post Quest"}
+                    {loading ? "Processing..." : formData.credits > userCredits ? "Insufficient Credits" : "Post Task"}
                   </button>
                 </form>
               )}
 
               {viewState === "success" && (
                 <div className="flex flex-col items-center justify-center text-center py-10">
-                  <CheckCircle size={64} className="text-[#3c8527] mb-4 drop-shadow-md" />
-                  <h2 className="text-2xl font-bold text-[#333] mb-2 uppercase tracking-wide">
-                    Quest Posted!
+                  <CheckCircle size={64} className="text-[#B8C6A5] mb-4" />
+                  <h2 className="text-2xl font-black text-black mb-2 uppercase tracking-wide">
+                    Task Posted!
                   </h2>
-                  <p className="text-[#555] mb-8 font-bold text-sm">
+                  <p className="text-[#3C4142] mb-8 font-extrabold text-sm">
                     Credits will be deducted upon completion.
                   </p>
                   <button
                     onClick={() => navigate("/my-requests")}
-                    className="py-3 px-6 font-bold uppercase tracking-wider text-white 
-                             bg-[#5D737E] border-4 border-black 
-                             shadow-[inset_4px_4px_0px_0px_#A2B9C4,inset_-4px_-4px_0px_0px_#333]
-                             hover:bg-[#6D838E] active:translate-y-1 transition-all"
+                    className="mc-button-blue py-3 px-6 font-black uppercase tracking-wider text-black 
+                             border-4 border-[#3C4142] shadow-[4px_4px_0px_0px_#3C4142]
+                             hover:brightness-105 active:translate-y-1 active:shadow-none transition-all"
                   >
-                    View My Quests
+                    View My Tasks
                   </button>
                 </div>
               )}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PlusCircle, List, UserCircle, CheckSquare, Clock, Sword, Map } from 'lucide-react'; 
+import { PlusCircle, UserCircle, CheckSquare, Sword, Map } from 'lucide-react'; 
 import NavCard from '../components/NavCard';
 import LeaderboardCard from '../components/LeaderboardCard';
 import { useNavigate } from 'react-router-dom';
@@ -10,15 +10,12 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import RuleBookModal from '../components/RuleBookModal';
 import { checkNearbyRequests, requestNotificationPermission } from "../services/notifications";
 
-
-
 const Home = () => {
   const navigate = useNavigate();
   const currentUser = auth.currentUser;
-  
   const [showRules, setShowRules] = useState(false); 
 
-  // Function to handle the permanent acceptance
+  // Function to handle the permanent acceptance of rules
   const handleAcceptRules = async () => {
     if (!currentUser) return;
     try {
@@ -28,7 +25,7 @@ const Home = () => {
       });
       setShowRules(false);
       
-      // Ask for permission immediately after accepting rules
+      // Request notification permission immediately after rules are accepted
       requestNotificationPermission(); 
 
     } catch (error) {
@@ -40,7 +37,6 @@ const Home = () => {
   useEffect(() => {
     if (!currentUser) return;
 
-    // --- CHECK USER STATUS (Rules & Credits) ---
     const checkUserProfile = async () => {
       try {
         const userRef = doc(db, "users", currentUser.uid);
@@ -49,15 +45,14 @@ const Home = () => {
         if (userSnap.exists()) {
           const userData = userSnap.data();
 
-          // Check 1: Have they accepted rules yet?
+          // Rule acceptance check
           if (!userData.hasAcceptedRules) {
             setShowRules(true);
           } else {
-             // If rules already accepted, ensure we have permission
              requestNotificationPermission();
           }
 
-          // Check 2: Do they have their starting credits?
+          // Credits initialization logic
           if (userData.credits === undefined) {
              await updateDoc(userRef, { credits: 50 });
           } else if (userData.credits === 0) {
@@ -72,9 +67,8 @@ const Home = () => {
     };
     
     checkUserProfile();
-    // -------------------------------------------
-
     requestAndStoreLocation(currentUser);
+
     (async () => {
       const result = await checkNearbyRequests(currentUser);
       console.log("Nearby requests check done", result);
@@ -83,72 +77,75 @@ const Home = () => {
   }, [currentUser]);
 
  return (
-    <div className="mc-landscape-bg min-h-screen pb-20 max-w-4xl mx-auto relative p-6">
+    /* 1. Canvas Container: Renders the drifting grid background */
+    <div className="app-canvas min-h-screen p-6">
+      <div className="max-w-4xl mx-auto pb-20 relative">
       
       {showRules && (
         <RuleBookModal onAccept={handleAcceptRules} />
       )}
 
-      {/* Header with Minecraft Panel style */}
-      <div className="mc-panel flex justify-between items-center mb-8 p-4">
+      {/* 2. Header: Refined with Matte Campus borders and black text */}
+      <div className="mc-panel flex justify-between items-center mb-10 p-4">
         <div>
-          <h1 className="text-xl font-bold text-black uppercase tracking-tight">
+          <h1 className="text-2xl font-black text-black uppercase tracking-tight">
             Welcome back, Player!
           </h1>
-          <p className="text-[#555555] text-xs font-bold uppercase">
+          <p className="text-slate-500 text-xs font-extrabold uppercase tracking-widest">
             Select your quest...
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-            {/* Notification Slot */}
-            <div className="mc-slot p-1 flex items-center justify-center bg-[#8B8B8B] w-12 h-12">
+        <div className="flex items-center gap-3">
+            {/* Notification Slot: Using the new shadow logic */}
+            <div className="bg-white border-4 border-[#3C4142] p-1 flex items-center justify-center w-12 h-12 shadow-[2px_2px_0px_0px_#3C4142]">
                 <NotificationBell currentUser={currentUser} />
             </div>
 
-            {/* Profile Slot */}
+            {/* Profile Slot: Tactile button with active state push-down */}
             <button 
                 onClick={() => navigate('/profile')} 
-                className="mc-button p-0 w-12 h-12 flex items-center justify-center"
+                className="bg-[#e0beb3 border-4 border-[#3C4142] w-12 h-12 flex items-center justify-center shadow-[2px_2px_0px_0px_#3C4142] active:translate-y-1 active:shadow-none transition-all cursor-pointer"
             >
-                <UserCircle size={28} />
+                <UserCircle size={28} className="text-[#3C4142]" />
             </button>
         </div>
       </div>
 
       <LeaderboardCard />
 
-      {/* Grid Layout using mc-button or mc-panel variations */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* 3. Action Grid: Force-injecting 'nav-card-base' to ensure black text clarity */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
         <NavCard 
           title="Request Help" 
           desc="Post a new bounty" 
           icon={PlusCircle} 
           to="/request" 
-          className="mc-button-red text-center"
+          className="nav-card-base mc-button-pink text-center"
         />
         <NavCard 
           title="Available Tasks" 
           desc="Earn XP & Credits" 
           icon={Sword} 
           to="/tasks" 
-          className="mc-button text-center"
+          className="nav-card-base mc-button-yellow text-center"
         />
         <NavCard 
           title="My Requests" 
           desc="Active Bounties" 
           icon={Map} 
           to="/my-requests" 
-          className="mc-button text-center"
+          className="nav-card-base mc-button-blue text-center"
         />
         <NavCard 
           title="My Tasks" 
           desc="Current Quests" 
           icon={CheckSquare} 
           to="/my-tasks" 
-          className="mc-button text-center"
+          className="nav-card-base mc-button-green text-center"
         />
       </div>
+    </div>
     </div>
   );
 };

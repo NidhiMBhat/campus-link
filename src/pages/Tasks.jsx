@@ -149,22 +149,22 @@ const Tasks = () => {
   };
 
   return (
-    // MAIN CONTAINER: Dark Cubes Background
-    <div className="min-h-screen w-full font-mono bg-[#111] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+    // MAIN CONTAINER: Matte Campus Background
+    <div className="app-canvas min-h-screen w-full font-mono">
       
-      {/* --- SUCCESS MODAL POPUP (Minecraft Style) --- */}
+      {/* --- SUCCESS MODAL POPUP --- */}
       {showSuccessModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-all">
-          <div className="bg-[#C6C6C6] border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] flex flex-col items-center text-center max-w-sm w-full">
-            <div className="w-20 h-20 bg-[#3c8527] border-4 border-black flex items-center justify-center mb-6 shadow-[inset_4px_4px_0px_0px_#5cbd38,inset_-4px_-4px_0px_0px_#1e4513]">
-              <CheckCircle size={40} className="text-white drop-shadow-md" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm transition-all">
+          <div className="mc-panel p-8 shadow-[4px_4px_0px_0px_#3C4142] flex flex-col items-center text-center max-w-sm w-full">
+            <div className="w-20 h-20 bg-[#B8C6A5] border-4 border-[#3C4142] flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#3C4142]">
+              <CheckCircle size={40} className="text-black" />
             </div>
-            <h2 className="text-2xl font-bold text-[#333] mb-2 uppercase tracking-wide">Quest Accepted!</h2>
-            <p className="text-[#555] mb-6 font-bold text-sm">Redirecting to active quests...</p>
+            <h2 className="text-2xl font-black text-black mb-2 uppercase tracking-wide">Task Accepted!</h2>
+            <p className="text-[#3C4142] mb-6 font-extrabold text-sm">Redirecting to active tasks...</p>
             
-            {/* Loading Bar (Green) */}
-            <div className="w-full h-4 bg-[#333] border-2 border-black overflow-hidden relative">
-              <div className="h-full bg-[#3c8527] animate-[loading_2s_ease-in-out_forwards] w-0"></div>
+            {/* Loading Bar */}
+            <div className="w-full h-4 bg-white border-4 border-[#3C4142] overflow-hidden relative">
+              <div className="h-full bg-[#B8C6A5] animate-[loading_2s_ease-in-out_forwards] w-0"></div>
             </div>
           </div>
         </div>
@@ -175,51 +175,51 @@ const Tasks = () => {
         {/* Back Button */}
         <button
           onClick={() => navigate("/home")}
-          className="mb-8 flex items-center text-white hover:text-yellow-400 transition group w-fit"
+          className="mb-8 flex items-center text-[#3C4142] hover:text-black transition group w-fit"
         >
-          <div className="bg-[#555] p-1 border-2 border-black group-active:translate-y-1 mr-2">
+          <div className="bg-[#CBD5E1] p-1 border-2 border-[#3C4142] group-active:translate-y-1 mr-2 shadow-[2px_2px_0px_0px_#3C4142]">
              <ArrowLeft size={20} />
           </div>
-          <span className="uppercase font-bold tracking-widest text-xs shadow-black drop-shadow-md">Back to Menu</span>
+          <span className="uppercase font-black tracking-widest text-xs">Back to Menu</span>
         </button>
 
         {/* Title */}
         <div className="mb-8">
-            <h1 className="text-3xl font-bold uppercase tracking-widest text-[#FCD34D] [text-shadow:3px_3px_#000]">
-                Available Quests
+            <h1 className="text-3xl font-black uppercase tracking-widest text-black">
+                Available Tasks
             </h1>
-            <p className="text-gray-400 mt-2 font-bold text-xs uppercase tracking-wide bg-black/50 inline-block px-2">
+            <p className="text-[#3C4142] mt-2 font-extrabold text-xs uppercase tracking-wide">
                 Earn credits by helping your peers.
             </p>
         </div>
 
         {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
-                <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-none animate-spin mb-4"></div>
-                <p className="text-gray-400 text-sm font-bold uppercase">Scanning Area...</p>
+                <div className="w-10 h-10 border-4 border-[#3C4142] border-t-transparent rounded-none animate-spin mb-4"></div>
+                <p className="text-[#3C4142] text-sm font-black uppercase">Loading Tasks...</p>
             </div>
         ) : tasks.length > 0 ? (
           <div className="space-y-6 pb-20">
             {tasks.map((task) => (
               <div
                 key={task.id}
-                // MINECRAFT PANEL: Stone background
-                className="relative bg-[#C6C6C6] border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] transition-all duration-300 hover:-translate-y-1"
+                // Matte Campus Panel
+                className="relative mc-panel p-6 shadow-[4px_4px_0px_0px_#3C4142] transition-all duration-300 hover:-translate-y-1"
               >
                 {/* Header */}
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex items-center gap-4">
                     {/* Icon Slot */}
-                    <div className="p-3 bg-[#8B8B8B] border-2 border-black shadow-[inset_3px_3px_0px_#373737,inset_-2px_-2px_0px_#FFF]">
-                      <Coffee size={24} className="text-white drop-shadow-md" />
+                    <div className="p-3 bg-[#CBD5E1] border-2 border-[#3C4142] shadow-[2px_2px_0px_0px_#3C4142]">
+                      <Coffee size={24} className="text-black" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-[#333] uppercase tracking-wide">
+                      <h3 className="text-lg font-black text-black uppercase tracking-wide">
                         {task.type}
                       </h3>
                       <div className="flex items-center gap-2 mt-1">
-                        <div className="w-2 h-2 bg-[#3c8527] border border-black animate-pulse"></div>
-                        <p className="text-xs text-[#555] font-bold font-mono uppercase tracking-wide">
+                        <div className="w-2 h-2 bg-[#B8C6A5] border border-[#3C4142] animate-pulse"></div>
+                        <p className="text-xs text-[#3C4142] font-extrabold font-mono uppercase tracking-wide">
                             REQ: {task.requesterName}
                         </p>
                       </div>
@@ -227,34 +227,34 @@ const Tasks = () => {
                   </div>
                   
                   {/* Credits Tag */}
-                  <div className="bg-[#8B8B8B] border-2 border-black px-3 py-1 text-[#FCD34D] text-xs font-bold tracking-wider uppercase shadow-[inset_2px_2px_0px_#373737] text-shadow-sm">
+                  <div className="bg-[#e0beb3] border-2 border-[#3C4142] px-3 py-1 text-black text-xs font-black tracking-wider uppercase shadow-[2px_2px_0px_0px_#3C4142]">
                     {task.credits || 0} Cr
                   </div>
                 </div>
 
                 {/* Description Box */}
-                <div className="bg-[#8B8B8B] border-2 border-black p-4 mb-6 shadow-[inset_3px_3px_0px_#373737,inset_-2px_-2px_0px_#FFF]">
-                   <p className="text-white text-sm leading-relaxed font-bold font-mono">
+                <div className="bg-white border-2 border-[#3C4142] p-4 mb-6 shadow-[2px_2px_0px_0px_#3C4142]">
+                   <p className="text-black text-sm leading-relaxed font-extrabold font-mono">
                      "{task.desc}"
                    </p>
                 </div>
 
                 {/* Details Section */}
                 <div className="flex flex-col gap-3 mb-6">
-                  <div className="flex items-center gap-3 text-sm bg-[#A2B9C4] p-3 border-2 border-black shadow-[2px_2px_0px_#000]">
-                    <MapPin size={16} className="text-[#A32222]" /> 
-                    <span className="text-[#333] font-bold uppercase text-xs">From:</span> 
-                    <span className="text-black font-bold uppercase">{task.source?.name}</span>
+                  <div className="flex items-center gap-3 text-sm bg-[#CBD5E1] p-3 border-2 border-[#3C4142] shadow-[2px_2px_0px_#3C4142]">
+                    <MapPin size={16} className="text-[#e0beb3]" /> 
+                    <span className="text-black font-extrabold uppercase text-xs">From:</span> 
+                    <span className="text-black font-black uppercase">{task.source?.name}</span>
                   </div>
-                  <div className="flex items-center gap-3 text-sm bg-[#A2B9C4] p-3 border-2 border-black shadow-[2px_2px_0px_#000]">
-                    <MapPin size={16} className="text-[#3c8527]" /> 
-                    <span className="text-[#333] font-bold uppercase text-xs">To:</span> 
-                    <span className="text-black font-bold uppercase">{task.dest?.name}</span>
+                  <div className="flex items-center gap-3 text-sm bg-[#CBD5E1] p-3 border-2 border-[#3C4142] shadow-[2px_2px_0px_#3C4142]">
+                    <MapPin size={16} className="text-[#B8C6A5]" /> 
+                    <span className="text-black font-extrabold uppercase text-xs">To:</span> 
+                    <span className="text-black font-black uppercase">{task.dest?.name}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-[#333] font-bold text-xs uppercase tracking-wide pl-1">
+                  <div className="flex items-center gap-2 text-black font-extrabold text-xs uppercase tracking-wide pl-1">
                     <Clock size={16} /> 
                     <span>Expires in:</span> 
-                    <span className="text-[#A32222]">
+                    <span className="text-[#e0beb3]">
                         {Math.round(((task.createdAt.toMillis() + getDurationMs(task.time)) - Date.now()) / 60000)} mins
                     </span>
                   </div>
@@ -264,14 +264,14 @@ const Tasks = () => {
                 {task.requesterId !== currentUserId ? (
                   <button
                     onClick={() => handleAcceptTask(task)}
-                    className="w-full bg-[#3c8527] hover:bg-[#4ca633] text-white font-bold py-3.5 border-4 border-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-[inset_4px_4px_0px_0px_#5cbd38,inset_-4px_-4px_0px_0px_#1e4513] active:translate-y-1 active:shadow-none transition-all"
+                    className="mc-button-green w-full text-black font-black py-3.5 border-4 border-[#3C4142] uppercase tracking-wider flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_#3C4142] active:translate-y-1 active:shadow-none transition-all"
                   >
-                    Accept Quest <ArrowRight size={20} />
+                    Accept Task <ArrowRight size={20} />
                   </button>
                 ) : (
-                  <div className="w-full py-3 border-4 border-black bg-[#555] text-center shadow-none cursor-not-allowed">
-                    <p className="text-xs text-[#aaa] font-bold uppercase tracking-wide">
-                      Cannot accept own quest
+                  <div className="w-full py-3 border-4 border-[#3C4142] bg-[#CBD5E1] text-center shadow-none cursor-not-allowed">
+                    <p className="text-xs text-[#3C4142] font-black uppercase tracking-wide">
+                      Cannot accept own task
                     </p>
                   </div>
                 )}
@@ -280,13 +280,13 @@ const Tasks = () => {
           </div>
         ) : (
           /* Empty State */
-          <div className="flex-1 flex flex-col items-center justify-center bg-[#C6C6C6] border-4 border-black p-10 text-center min-h-[400px] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)]">
-            <div className="bg-[#8B8B8B] p-4 border-2 border-black mb-6 shadow-[inset_3px_3px_0px_#373737,inset_-2px_-2px_0px_#FFF]">
-              <Coffee size={48} className="text-[#333]" />
+          <div className="flex-1 flex flex-col items-center justify-center mc-panel p-10 text-center min-h-[400px] shadow-[4px_4px_0px_0px_#3C4142]">
+            <div className="bg-[#CBD5E1] p-4 border-2 border-[#3C4142] mb-6 shadow-[2px_2px_0px_0px_#3C4142]">
+              <Coffee size={48} className="text-black" />
             </div>
-            <h3 className="text-lg font-bold text-[#333] mb-2 uppercase tracking-wide">All caught up!</h3>
-            <p className="text-[#555] mt-2 max-w-xs mx-auto font-bold text-xs">
-              There are no pending quests in this server right now.
+            <h3 className="text-lg font-black text-black mb-2 uppercase tracking-wide">All caught up!</h3>
+            <p className="text-[#3C4142] mt-2 max-w-xs mx-auto font-extrabold text-xs">
+              There are no pending tasks right now.
             </p>
           </div>
         )}

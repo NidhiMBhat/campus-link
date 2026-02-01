@@ -1,17 +1,38 @@
 @import "tailwindcss";
 
-/* =========================================
-   1. MINECRAFT THEME UTILITIES (New UI)
-   ========================================= */
+/* 1. Define the animation at the top level */
+@keyframes gridMove {
+  from { background-position: 0 0; }
+  to { background-position: 40px 40px; }
+}
 
-/* The Main Background (Dark Dirt/Bedrock Texture) */
+/* 2. Update the canvas with higher priority */
+.app-canvas {
+  /* Use !important to override any remaining .mc-landscape-bg styles */
+  background-color: #d3bfac !important;
+  
+  /* Increased dot size to 2px and color to #CBD5E1 for visibility */
+  background-image: radial-gradient(#a0a3a6 2px, transparent 2px) !important;
+  
+  /* Controls the spacing of the 'Blueprint' grid */
+  background-size: 40px 40px !important;
+  
+  /* Linear move ensures the drift is smooth and never stops */
+  animation: gridMove 10s linear infinite !important;
+  
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  z-index: 0;
+}
+
 .mc-bg {
   /* We use a repeating dark noise pattern to look like Bedrock/Deepslate */
   background-color: #1a1a1a;
   background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
   min-height: 100vh;
   padding: 1.5rem; /* p-6 */
-  color: white;
+  color: rgb(8, 4, 130);
   font-family: 'Courier New', Courier, monospace; /* Monospaced for retro feel */
 }
 /* Landscape Background */
@@ -36,94 +57,135 @@
   filter: blur(4px);
   z-index: -1;
 }
-/* The Main UI Panel (Stone GUI Style) */
+
 .mc-panel {
-  background-color: #C6C6C6; /* Light Grey Stone */
-  border: 4px solid #000000;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #F7F3EE; 
+  border: 4px solid #3C4142;
   color: black;
-  /* 3D Bevel Effect: Light Top/Left, Dark Bottom/Right */
   box-shadow: inset -4px -4px 0px 0px #555555, inset 4px 4px 0px 0px #FFFFFF;
 }
 
-/* The Dark Sub-Panel (Inventory Slots) */
 .mc-slot {
-  background-color: #8B8B8B; /* Darker Grey */
-  border: 4px solid #000000;
-  /* Inset Shadow: Looks "pressed in" */
-  box-shadow: inset 4px 4px 0px 0px #373737, inset -2px -2px 0px 0px #FFFFFF;
+  background-color: #c4c2c2; 
+  border: 4px solid #818384;
+  font-family: 'Courier New', Courier, monospace;
+  box-shadow: inset 4px 4px 0px 0px #dfdfdf, inset -2px -2px 0px 0px #FFFFFF;
+}
+.nav-card-base {
+  border: 4px solid #3C4142 !important;
+  box-shadow: 4px 4px 0px 0px #3C4142 !important;
+  border-radius: 16px;
+  transition: all 0.1s ease;
 }
 
-/* The Standard Button (Stone Button) */
-.mc-button {
+.nav-card-base h3 {
+  color: #000000 !important; /* High-contrast Title */
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.nav-card-base p {
+  color: #3C4142 !important; /* Deep Slate Desc */
+  font-weight: 600;
+}
+.mc-button-blue {
   width: 100%;
-  padding: 0.75rem 1.5rem; /* py-3 px-6 */
+  padding: 0.75rem 1.5rem; 
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: white;
-  background-color: #5D737E; /* Stone Blue-Grey */
-  border: 4px solid #000000;
-  text-shadow: 2px 2px #000000;
+  color: rgb(6, 6, 6);
+  background-color: #CBD5E1;
+  border: 2px solid #aab5c3;
   transition: all 0.1s;
   cursor: pointer;
-  /* 3D Button Pop-out Effect */
+  font-family: 'Courier New', Courier, monospace;
   box-shadow: inset -4px -4px 0px 0px #333333, inset 4px 4px 0px 0px #A2B9C4;
 }
 
 .mc-button:hover {
-  background-color: #6D838E; /* Lighter on hover */
+  background-color: #6D838E; 
 }
 
 .mc-button:active {
   transform: translateY(4px);
-  box-shadow: inset 4px 4px 0px 0px #333333; /* Pressed in look */
+  box-shadow: inset 4px 4px 0px 0px #333333; 
+}
+.mc-button-green {
+  width: 100%;
+  padding: 0.75rem 1.5rem; 
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: white;
+  background-color: #B8C6A5;
+  border: 2px solid #a7b594;
+  transition: all 0.1s;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+  box-shadow: inset -4px -4px 0px 0px #3C4142, inset 4px 4px 0px 0px #A2B9C4;
 }
 
-/* Danger Button (Redstone/TNT Style) */
-.mc-button-red {
+.mc-button-pink {
   width: 100%;
   padding: 0.75rem 1.5rem;
   font-weight: bold;
   text-transform: uppercase;
   color: white;
-  background-color: #A32222; /* Deep Red */
-  border: 4px solid #000000;
-  text-shadow: 2px 2px #000000;
-  box-shadow: inset -4px -4px 0px 0px #500000, inset 4px 4px 0px 0px #E57373;
+  background-color: #e0beb3; 
+  border: 4px solid #616465;
+  font-family: 'Courier New', Courier, monospace;
   transition: all 0.1s;
+  cursor: pointer;
+}
+
+.mc-button-yellow {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: white;
+  background-color: #E8D5A3;
+  border: 4px solid #616465;
+  transition: all 0.1s;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+  box-shadow: inset -4px -4px 0px 0px #3C4142, inset 4px 4px 0px 0px #F5ECD4;
 }
 
 .mc-button-red:hover {
-  background-color: #C42C2C;
+  background-color: #c09f9f;
 }
 
 .mc-button-red:active {
   transform: translateY(4px);
-  box-shadow: inset 4px 4px 0px 0px #500000;
+  box-shadow: inset 4px 4px 0px 0px #957171;
 }
 
-/* Input Fields (Chat Box Style) */
-.mc-input {
+.mc-button-blue {
   width: 100%;
-  background-color: #000000;
-  border: 2px solid #555555;
+  background-color: #CBD5E1;
+  border: 4px solid #616465;
   padding: 0.75rem;
   color: white;
   font-family: 'Courier New', Courier, monospace;
   outline: none;
-  box-shadow: inset 2px 2px 0px 0px #000000;
+  box-shadow: inset 2px 2px 0px 0px #3C4142;
 }
 
 .mc-input:focus {
-  border-color: #FFFFFF; /* Highlight white when typing */
+  border-color: #FFFFFF;
 }
 
 .mc-input::placeholder {
-  color: #6b7280; /* Gray-500 */
+  color: #bfc5d1; 
 }
 
 /* Table Styles (For Admin Panel) */
 .mc-table-head {
+  font-family: 'Courier New', Courier, monospace;
   background-color: #8B8B8B;
   color: white;
   border-bottom: 4px solid #000000;
@@ -134,6 +196,7 @@
 }
 
 .mc-table-row {
+  font-family: 'Courier New', Courier, monospace;
   border-bottom: 2px solid #555555;
   transition: background-color 0.2s;
 }
@@ -143,6 +206,7 @@
 }
 
 .mc-table-cell {
+  font-family: 'Courier New', Courier, monospace;
   padding: 0.75rem;
   color: black;
   font-weight: bold;

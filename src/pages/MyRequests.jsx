@@ -82,28 +82,28 @@ const MyRequests = () => {
   };
 
   return (
-    // MAIN CONTAINER: Dark Cubes Background
-    <div className="min-h-screen w-full p-6 font-mono bg-[#111] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
+    // MAIN CONTAINER: Matte Campus Background
+    <div className="app-canvas min-h-screen w-full p-6 font-mono">
       
       <div className="max-w-2xl mx-auto flex flex-col">
         {/* Back Button */}
         <button
           onClick={() => navigate("/home")}
-          className="mb-8 flex items-center text-white hover:text-yellow-400 transition group w-fit"
+          className="mb-8 flex items-center text-[#3C4142] hover:text-black transition group w-fit"
         >
-          <div className="bg-[#555] p-1 border-2 border-black group-active:translate-y-1 mr-2">
+          <div className="bg-[#CBD5E1] p-1 border-2 border-[#3C4142] group-active:translate-y-1 mr-2 shadow-[2px_2px_0px_0px_#3C4142]">
              <ArrowLeft size={20} />
           </div>
-          <span className="uppercase font-bold tracking-widest text-xs shadow-black drop-shadow-md">Back to Menu</span>
+          <span className="uppercase font-black tracking-widest text-xs">Back to Menu</span>
         </button>
 
         {/* Title */}
         <div className="mb-8">
-            <h1 className="text-3xl font-bold uppercase tracking-widest text-[#FCD34D] [text-shadow:3px_3px_#000]">
-                My Quests
+            <h1 className="text-3xl font-black uppercase tracking-widest text-black">
+                My Requests
             </h1>
-            <div className="bg-[#00000080] px-2 py-1 mt-2 inline-block border-l-4 border-[#555]">
-                <p className="text-gray-300 text-xs font-bold uppercase tracking-wide">
+            <div className="bg-[#CBD5E1] px-2 py-1 mt-2 inline-block border-l-4 border-[#3C4142]">
+                <p className="text-black text-xs font-extrabold uppercase tracking-wide">
                     Manage your active orders
                 </p>
             </div>
@@ -111,8 +111,8 @@ const MyRequests = () => {
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-none animate-spin mb-4"></div>
-              <p className="text-gray-400 text-sm font-bold uppercase">Loading World...</p>
+              <div className="w-10 h-10 border-4 border-[#3C4142] border-t-transparent rounded-none animate-spin mb-4"></div>
+              <p className="text-[#3C4142] text-sm font-black uppercase">Loading...</p>
           </div>
         ) : requests.length > 0 ? (
           <div className="space-y-6 pb-20">
@@ -121,28 +121,28 @@ const MyRequests = () => {
               return (
               <div
                 key={task.id}
-                // MINECRAFT CARD: Stone Panel
-                className="relative bg-[#C6C6C6] border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-1"
+                // Matte Campus Card
+                className="relative mc-panel p-6 shadow-[4px_4px_0px_0px_#3C4142] transition-all hover:-translate-y-1"
               >
                 {/* Header */}
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h2 className="text-lg font-bold text-[#333] uppercase tracking-wide mb-1">
-                        {task.type} {/* Changed from task.title to task.type as per your previous schema */}
+                    <h2 className="text-lg font-black text-black uppercase tracking-wide mb-1">
+                        {task.type}
                     </h2>
-                    <p className="text-[#555] text-xs font-bold font-mono border-l-2 border-[#777] pl-2">
-                        "{task.desc}" {/* Changed from task.description */}
+                    <p className="text-[#3C4142] text-xs font-extrabold font-mono border-l-2 border-[#3C4142] pl-2">
+                        "{task.desc}"
                     </p>
                   </div>
 
                   {/* Status Badge */}
-                  <div className={`border-2 border-black px-2 py-1 flex items-center gap-2 shadow-[2px_2px_0px_#000] ${
+                  <div className={`border-2 border-[#3C4142] px-2 py-1 flex items-center gap-2 shadow-[2px_2px_0px_#3C4142] ${
                       task.status === 'accepted' 
-                      ? 'bg-[#3c8527] text-white' 
-                      : 'bg-[#FCD34D] text-black'
+                      ? 'bg-[#B8C6A5] text-black' 
+                      : 'bg-[#e0beb3] text-black'
                   }`}>
-                    {expired ? <AlertCircle size={14} /> : task.status === 'accepted' ? <div className="w-2 h-2 bg-white animate-pulse"></div> : <Loader2 size={14} className="animate-spin" />}
-                    <span className="text-[10px] uppercase font-bold tracking-widest">
+                    {expired ? <AlertCircle size={14} /> : task.status === 'accepted' ? <div className="w-2 h-2 bg-black animate-pulse"></div> : <Loader2 size={14} className="animate-spin" />}
+                    <span className="text-[10px] uppercase font-black tracking-widest">
                        {expired ? "EXPIRED" : task.status}
                     </span>
                   </div>
@@ -150,63 +150,63 @@ const MyRequests = () => {
 
                 {/* Expiration Message */}
                 {expired && (
-                    <div className="bg-[#A32222] border-2 border-black p-2 mb-4 text-white text-xs font-bold uppercase tracking-wide flex items-center gap-2">
+                    <div className="bg-[#e0beb3] border-2 border-[#3C4142] p-2 mb-4 text-black text-xs font-black uppercase tracking-wide flex items-center gap-2">
                       <AlertCircle size={16} />
-                      <span>Quest Expired: No players accepted.</span>
+                      <span>Task Expired: No one accepted.</span>
                     </div>
                 )}
 
-                {/* Details Section (Dark Slot) */}
-                <div className="bg-[#8B8B8B] border-2 border-black p-4 space-y-3 mb-6 shadow-[inset_3px_3px_0px_#373737,inset_-2px_-2px_0px_#FFF]">
-                  <div className="flex items-center text-white text-xs font-bold font-mono">
-                    <MapPin size={14} className="text-[#FCD34D] mr-2" />
-                    <span className="text-[#DDD] mr-1 uppercase">From:</span> {task.source?.name}
+                {/* Details Section */}
+                <div className="bg-[#CBD5E1] border-2 border-[#3C4142] p-4 space-y-3 mb-6 shadow-[2px_2px_0px_0px_#3C4142]">
+                  <div className="flex items-center text-black text-xs font-extrabold font-mono">
+                    <MapPin size={14} className="text-[#e0beb3] mr-2" />
+                    <span className="text-[#3C4142] mr-1 uppercase">From:</span> {task.source?.name}
                   </div>
-                  <div className="flex items-center text-white text-xs font-bold font-mono">
-                    <MapPin size={14} className="text-[#39ff14] mr-2" />
-                    <span className="text-[#DDD] mr-1 uppercase">To:</span> {task.dest?.name}
+                  <div className="flex items-center text-black text-xs font-extrabold font-mono">
+                    <MapPin size={14} className="text-[#B8C6A5] mr-2" />
+                    <span className="text-[#3C4142] mr-1 uppercase">To:</span> {task.dest?.name}
                   </div>
-                  <div className="flex items-center text-white text-xs font-bold font-mono">
-                    <Clock size={14} className="text-orange-400 mr-2" />
-                    <span className="text-[#DDD] mr-1 uppercase">Time:</span> {task.time}
+                  <div className="flex items-center text-black text-xs font-extrabold font-mono">
+                    <Clock size={14} className="text-[#e0beb3] mr-2" />
+                    <span className="text-[#3C4142] mr-1 uppercase">Time:</span> {task.time}
                   </div>
                 </div>
 
                 {/* ACCEPTED STATE: Contact & Actions */}
                 {task.status === "accepted" && (
-                  <div className="bg-[#A2B9C4] border-2 border-black p-4 mb-6 shadow-[2px_2px_0px_#000]">
+                  <div className="bg-white border-2 border-[#3C4142] p-4 mb-6 shadow-[2px_2px_0px_#3C4142]">
                     <div className="flex justify-between items-center mb-4">
                       <div>
-                        <p className="text-[#333] text-[10px] uppercase font-bold tracking-wider mb-1">Assigned Player</p>
-                        <p className="text-black font-bold text-sm uppercase">{task.helperName || "Unknown"}</p>
-                        <p className="text-[#555] text-xs font-mono">{task.helperPhone || "No Contact"}</p>
+                        <p className="text-[#3C4142] text-[10px] uppercase font-black tracking-wider mb-1">Assigned Helper</p>
+                        <p className="text-black font-black text-sm uppercase">{task.helperName || "Unknown"}</p>
+                        <p className="text-[#3C4142] text-xs font-mono">{task.helperPhone || "No Contact"}</p>
                       </div>
-                      <a href={`tel:${task.helperPhone}`} className="bg-[#5D737E] p-2 border-2 border-black hover:bg-[#6D838E] active:translate-y-1 shadow-[2px_2px_0px_#000]">
-                        <Phone size={18} className="text-white" />
+                      <a href={`tel:${task.helperPhone}`} className="bg-[#CBD5E1] p-2 border-2 border-[#3C4142] hover:bg-[#B8C6A5] active:translate-y-1 shadow-[2px_2px_0px_#3C4142]">
+                        <Phone size={18} className="text-black" />
                       </a>
                     </div>
                   
-                    {/* CONFIRM BUTTON (Emerald) */}
+                    {/* CONFIRM BUTTON */}
                     <button
                       onClick={() => handleCompleteTask(task)}
                       disabled={task.requesterConfirmed || processingId === task.id}
-                      className={`w-full py-3 border-4 border-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all
+                      className={`w-full py-3 border-4 border-[#3C4142] font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all
                         ${task.requesterConfirmed 
-                          ? "bg-[#555] text-gray-400 cursor-not-allowed shadow-none" 
-                          : "bg-[#3c8527] text-white shadow-[inset_4px_4px_0px_0px_#5cbd38,inset_-4px_-4px_0px_0px_#1e4513] hover:bg-[#4ca633] active:translate-y-1"
+                          ? "bg-[#CBD5E1] text-[#3C4142] cursor-not-allowed shadow-none" 
+                          : "mc-button-green text-black shadow-[4px_4px_0px_0px_#3C4142] hover:brightness-105 active:translate-y-1 active:shadow-none"
                         }`}
                     >
                       {processingId === task.id ? "Processing..." : 
                        task.requesterConfirmed ? (
-                         <> <CheckCircle size={16} /> Waiting for Player...</>
+                         <> <CheckCircle size={16} /> Waiting for Helper...</>
                        ) : "Confirm Items Received"}
                     </button>
                     
                     {task.helperConfirmed && !task.requesterConfirmed && (
-                      <div className="mt-3 bg-[#FCD34D] border-2 border-black p-2 flex items-center justify-center gap-2 animate-pulse">
+                      <div className="mt-3 bg-[#e0beb3] border-2 border-[#3C4142] p-2 flex items-center justify-center gap-2 animate-pulse">
                           <div className="w-2 h-2 bg-black"></div>
-                          <p className="text-xs text-black font-bold uppercase tracking-wide">
-                            Player marked as done. Confirm now!
+                          <p className="text-xs text-black font-black uppercase tracking-wide">
+                            Helper marked as done. Confirm now!
                           </p>
                       </div>
                     )}
@@ -214,16 +214,16 @@ const MyRequests = () => {
                 )}
 
                 {/* Footer */}
-                <div className="border-t-2 border-[#777] border-dashed pt-4 flex justify-between items-center">
+                <div className="border-t-2 border-[#3C4142] border-dashed pt-4 flex justify-between items-center">
                   <div>
-                    <p className="text-[#555] text-[10px] uppercase tracking-wider font-bold">Reward</p>
-                    <p className="text-lg font-bold text-[#333]">{task.credits} Cr</p>
+                    <p className="text-[#3C4142] text-[10px] uppercase tracking-wider font-black">Reward</p>
+                    <p className="text-lg font-black text-black">{task.credits} Cr</p>
                   </div>
 
-                  {/* CANCEL BUTTON (Redstone) */}
+                  {/* CANCEL BUTTON */}
                   <button
                     onClick={() => handleCancel(task.id)}
-                    className="flex items-center gap-2 bg-[#A32222] hover:bg-[#C42C2C] border-2 border-black text-white px-4 py-2 text-xs font-bold uppercase tracking-wide shadow-[2px_2px_0px_#500] active:translate-y-1 active:shadow-none transition-all"
+                    className="flex items-center gap-2 mc-button-pink border-2 border-[#3C4142] text-black px-4 py-2 text-xs font-black uppercase tracking-wide shadow-[2px_2px_0px_#3C4142] active:translate-y-1 active:shadow-none transition-all"
                   >
                     <Trash2 size={14} /> {expired ? "Remove" : "Cancel"}
                   </button>
@@ -234,19 +234,19 @@ const MyRequests = () => {
           </div>
         ) : (
           /* Empty State */
-          <div className="flex-1 flex flex-col items-center justify-center bg-[#C6C6C6] border-4 border-black p-10 text-center min-h-[300px] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)]">
-            <div className="bg-[#8B8B8B] p-4 border-2 border-black mb-6 shadow-[inset_3px_3px_0px_#373737,inset_-2px_-2px_0px_#FFF]">
-              <FolderOpen size={48} className="text-[#333]" />
+          <div className="flex-1 flex flex-col items-center justify-center mc-panel p-10 text-center min-h-[300px] shadow-[4px_4px_0px_0px_#3C4142]">
+            <div className="bg-[#CBD5E1] p-4 border-2 border-[#3C4142] mb-6 shadow-[2px_2px_0px_0px_#3C4142]">
+              <FolderOpen size={48} className="text-black" />
             </div>
-            <h3 className="text-lg font-bold text-[#333] mb-2 uppercase tracking-wide">No Active Quests</h3>
-            <p className="text-[#555] text-xs font-bold mb-6 max-w-xs">
-                Your quest log is empty. Post a request to get help from other players.
+            <h3 className="text-lg font-black text-black mb-2 uppercase tracking-wide">No Active Requests</h3>
+            <p className="text-[#3C4142] text-xs font-extrabold mb-6 max-w-xs">
+                Your request list is empty. Post a request to get help from other students.
             </p>
             <button
               onClick={() => navigate("/request")}
-              className="bg-[#3c8527] hover:bg-[#4ca633] text-white px-6 py-3 border-4 border-black font-bold uppercase tracking-widest shadow-[inset_4px_4px_0px_0px_#5cbd38,inset_-4px_-4px_0px_0px_#1e4513] active:translate-y-1 transition-all"
+              className="mc-button-green text-black px-6 py-3 border-4 border-[#3C4142] font-black uppercase tracking-widest shadow-[4px_4px_0px_0px_#3C4142] active:translate-y-1 active:shadow-none transition-all"
             >
-              Start New Quest
+              Create New Request
             </button>
           </div>
         )}

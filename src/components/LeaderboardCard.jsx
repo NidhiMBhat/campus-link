@@ -67,9 +67,7 @@ const LeaderboardCard = () => {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <div className="bg-[#5D737E] p-1 border-2 border-black">
-                    <User size={16} className="text-white" />
-                  </div>
+                  
                   <span className="text-black font-bold uppercase text-sm truncate max-w-[120px]">
                     {helper.fullName || "Player"}
                   </span>

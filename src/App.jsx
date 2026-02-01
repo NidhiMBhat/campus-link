@@ -10,7 +10,12 @@ import MyRequests from './pages/MyRequests';
 import AdminPanel from './pages/AdminPanel';
 function App() {
   return (
-    <div className="min-h-screen w-full bg-gray-900 text-white">
+    <div className="min-h-screen w-full bg-gray-900 text-white relative">
+      {/* Beta Label */}
+      <div className="fixed bottom-4 right-4 z-[999] text-black/40 text-xs font-medium uppercase tracking-widest" style={{ fontFamily: 'Inter, sans-serif' }}>
+        Beta
+      </div>
+      
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
