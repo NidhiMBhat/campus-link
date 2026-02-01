@@ -162,3 +162,13 @@
 .animate-shake {
   animation: shake 0.3s ease-in-out;
 }
+/* Add to index.css */
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.animate-text-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}

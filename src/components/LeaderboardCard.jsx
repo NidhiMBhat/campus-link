@@ -78,7 +78,7 @@ const LeaderboardCard = () => {
 
               {/* Score Display */}
               <div className="text-right flex items-center gap-2">
-                <span className="text-[#2e7d32] font-bold text-lg drop-shadow-sm">
+                <span className="text-[#FFDB58] font-bold text-lg drop-shadow-sm">
                   {helper.credits || 0}
                 </span>
                 <span className="text-black/60 text-[10px] font-bold uppercase">
