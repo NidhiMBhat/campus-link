@@ -118,7 +118,7 @@ const Home = () => {
             desc="Post a new bounty" 
             icon={PlusCircle} 
             to="/request" 
-            className="mc-button-red text-center"
+            className="mc-button text-center"
           />
           <NavCard 
             title="Available Tasks" 
