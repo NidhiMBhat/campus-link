@@ -7,8 +7,11 @@ import {
   onAuthStateChanged,
   sendEmailVerification,
   sendPasswordResetEmail,
-  setPersistence,         // <--- ADDED
-  browserLocalPersistence // <--- ADDED
+  setPersistence,
+  browserLocalPersistence,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  browserPopupRedirectResolver,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
@@ -22,118 +25,132 @@ export const AuthProvider = ({ children }) => {
     return sendPasswordResetEmail(auth, email);
   };
 
-  // REGISTER
+  // --- GOOGLE SIGN IN (REDIRECT VERSION) ---
+  const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ 
+      hd: "rvce.edu.in", 
+      prompt: "select_account" 
+    });
+
+    try {
+      // Use the resolver to clear potential stale domain errors
+      await signInWithRedirect(auth, provider, browserPopupRedirectResolver);
+    } catch (error) {
+      console.error("Auth Error:", error.message);
+    }
+  };
+
+  // --- REGISTER (EMAIL/PASS) ---
   const register = async (email, password, fullName, phone) => {
     const collegeRegex = /^[a-zA-Z0-9._%+-]+@rvce\.edu\.in$/;
     if (!collegeRegex.test(email)) {
       throw new Error("Please use a valid @rvce.edu.in email");
     }
-  
+
     const res = await createUserWithEmailAndPassword(auth, email, password);
-    await sendEmailVerification(res.user);
-  
-    const now = new Date().toISOString(); 
+    const now = new Date().toISOString();
 
     await setDoc(doc(db, "users", res.user.uid), {
       uid: res.user.uid,
       email,
       fullName,
       phone,
-      verified: false,
+      verified: true,
       createdAt: now,
       credits: 50,
       requested: 0,
       helped: 0,
-      isBlacklisted: false, // Default status
-      lastKnownLocation: {
-        lat: 12.96,
-        lng: 77.60,
-        updatedAt: now
-      },
+      isBlacklisted: false,
+      lastKnownLocation: { lat: 12.96, lng: 77.60, updatedAt: now },
       locationPermission: "granted",
     });
-  
+
     return res.user;
   };
 
-  // LOGIN
+  // --- LOGIN (EMAIL/PASS) ---
   const login = async (email, password) => {
-    // 1. Enable Persistence (Stay logged in even if tab closes)
     await setPersistence(auth, browserLocalPersistence);
-
     const res = await signInWithEmailAndPassword(auth, email, password);
-  
-    if (!res.user.emailVerified) {
-      await signOut(auth);
-      throw new Error("Please verify your email before logging in.");
-    }
 
-    // 2. Save Login Timestamp (For 24h Timer)
     localStorage.setItem("loginTimestamp", Date.now().toString());
-
     const userRef = doc(db, "users", res.user.uid);
     await setDoc(userRef, { verified: true }, { merge: true });
-  
+
     return res;
   };
 
-  // LOGOUT
+  // --- LOGOUT ---
   const logout = async () => {
-    sessionStorage.removeItem('hasAcceptedRules'); 
-    localStorage.removeItem("loginTimestamp"); // <--- Clear the timer
+    sessionStorage.removeItem("hasAcceptedRules");
+    localStorage.removeItem("loginTimestamp");
     await signOut(auth);
   };
 
-  // AUTH STATE LISTENER
+  // --- AUTH STATE LISTENER (THE CORE LOGIC) ---
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setLoading(true); // Ensure we are in a loading state while processing
+
       if (firebaseUser) {
-        
-        // --- 24-HOUR SESSION CHECK ---
+        // 1. Domain Check (Case-Insensitive)
+        if (!firebaseUser.email.toLowerCase().endsWith("@rvce.edu.in")) {
+          await signOut(auth);
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
+        // 2. 24-Hour Session Check
         const savedTime = localStorage.getItem("loginTimestamp");
         const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-        
-        // If time exists AND it has been more than 24 hours
-        if (savedTime && (Date.now() - parseInt(savedTime) > ONE_DAY_MS)) {
-             console.log("Session expired. Logging out.");
-             await signOut(auth);
-             setUser(null);
-             setLoading(false);
-             return;
+        if (savedTime && Date.now() - parseInt(savedTime) > ONE_DAY_MS) {
+          await signOut(auth);
+          setUser(null);
+          setLoading(false);
+          return;
         }
-        // -----------------------------
 
-        // We fetch the doc even if email not verified to check blacklist status
-        const snap = await getDoc(doc(db, "users", firebaseUser.uid));
-        
-        if (snap.exists()) {
-             const data = snap.data();
+        // 3. Firestore Sync (Fetch or Create)
+        const userRef = doc(db, "users", firebaseUser.uid);
+        let snap = await getDoc(userRef);
 
-             // --- BLACKLIST CHECK START ---
-             if (data.isBlacklisted) {
-                 alert("⚠️ ACCOUNT SUSPENDED ⚠️\n\nYour account has been blacklisted due to reported violations.\nYou cannot access CampusLink.");
-                 await signOut(auth); // Kick them out immediately
-                 setUser(null);
-                 setLoading(false);
-                 return;
-             }
-             // --- BLACKLIST CHECK END ---
+        if (!snap.exists()) {
+          const now = new Date().toISOString();
+          const newUserData = {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            fullName: firebaseUser.displayName || "RVCE Student",
+            phone: "",
+            verified: true,
+            createdAt: now,
+            credits: 50,
+            requested: 0,
+            helped: 0,
+            isBlacklisted: false,
+            lastKnownLocation: { lat: 12.96, lng: 77.60, updatedAt: now },
+            locationPermission: "granted",
+          };
+          await setDoc(userRef, newUserData);
+          snap = await getDoc(userRef); // Re-fetch to confirm data
+        }
 
-             // Proceed only if email is verified (or if it's the specific admin bypassing)
-             if(firebaseUser.emailVerified || data.email === "admin@campuslink.com") {
-                setUser({ uid: firebaseUser.uid, ...data, verified: true });
-                
-                // Safety: If user is logged in but has no timestamp (old session), start the timer now
-                if (!savedTime) {
-                    localStorage.setItem("loginTimestamp", Date.now().toString());
-                }
+        const data = snap.data();
 
-             } else {
-                 setUser(null);
-             }
-        } else {
-             // Fallback for users without docs (rare)
-             setUser({ uid: firebaseUser.uid, email: firebaseUser.email, verified: firebaseUser.emailVerified });
+        // 4. Blacklist Check
+        if (data.isBlacklisted) {
+          alert("⚠️ ACCOUNT SUSPENDED ⚠️");
+          await signOut(auth);
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+
+        // 5. Finalize User State
+        setUser({ uid: firebaseUser.uid, ...data, verified: true });
+        if (!savedTime) {
+          localStorage.setItem("loginTimestamp", Date.now().toString());
         }
       } else {
         setUser(null);
@@ -145,7 +162,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, register, login, logout, forgotPassword }}>
+    <AuthContext.Provider
+      value={{ user, register, login, logout, forgotPassword, signInWithGoogle }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );
