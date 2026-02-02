@@ -171,7 +171,7 @@ const Profile = () => {
                     className="w-full py-3 bg-[#A32222] hover:bg-[#C42C2C] border-4 border-black text-white font-bold uppercase tracking-widest shadow-[inset_4px_4px_0px_0px_#EF5350,inset_-4px_-4px_0px_0px_#500000] active:translate-y-1 active:shadow-none transition-all flex items-center justify-center gap-3"
                 >
                     <LogOut size={18} />
-                    Logout from Server
+                    Logout 
                 </button>
 
             </div>

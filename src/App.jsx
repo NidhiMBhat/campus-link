@@ -23,6 +23,12 @@ function App() {
    
         <Route path="/my-requests" element={<MyRequests />} /> 
       </Routes>
+      {/* FIXED BETA BADGE */}
+<div className="fixed bottom-4 right-4 z-50 pointer-events-none select-none">
+  <div className="opacity-50 text-white font-bold text-xs px-2 py-1 uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)]">
+    BETA
+  </div>
+</div>
     </div>
   );
 }

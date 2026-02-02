@@ -154,7 +154,7 @@ const Login = () => {
                          hover:bg-[#4ca633] active:translate-y-1 active:shadow-none transition-all
                          text-shadow-[2px_2px_#000]"
             >
-              Login To World
+              Login
             </button>
           </form>
 
@@ -162,7 +162,7 @@ const Login = () => {
           <div className="mt-8 text-center text-sm font-bold border-t-2 border-[#777] pt-4 border-dashed">
             <p className="text-[#444] mb-2 text-xs">New Player?</p>
             <Link to="/register" className="text-blue-700 hover:text-blue-500 hover:tracking-wide transition-all uppercase decoration-2 hover:underline">
-              Create New Character &rarr;
+              Create New Account &rarr;
             </Link>
           </div>
 

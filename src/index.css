@@ -5,36 +5,20 @@
    ========================================= */
 
 /* The Main Background (Dark Dirt/Bedrock Texture) */
-.mc-bg {
-  /* We use a repeating dark noise pattern to look like Bedrock/Deepslate */
-  background-color: #1a1a1a;
-  background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
-  min-height: 100vh;
-  padding: 1.5rem; /* p-6 */
-  color: white;
-  font-family: 'Courier New', Courier, monospace; /* Monospaced for retro feel */
-}
-/* Landscape Background */
+/* Updated Home Page Background (Matches Profile & Other Pages) */
 .mc-landscape-bg {
-  background: 
-    /* Dark overlay to make the UI readable */
-    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    /* Classic Minecraft Landscape */
-    url(https://wallpapercave.com/wp/wp4031389.jpg); 
-  background-size: cover;
-  background-position: center;
+  background-color: #060606 !important;
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png") !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
   background-attachment: fixed;
   min-height: 100vh;
+  width: 100%;
 }
 
-/* Optional: Add a slight blur to the background only */
+/* Remove the blur since the pattern should be sharp */
 .mc-landscape-bg::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: inherit;
-  filter: blur(4px);
-  z-index: -1;
+  display: none;
 }
 /* The Main UI Panel (Stone GUI Style) */
 .mc-panel {

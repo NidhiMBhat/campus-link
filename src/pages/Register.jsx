@@ -37,10 +37,10 @@ const Register = () => {
           {/* Header */}
           <div className="text-center mb-6">
             <h1 className="text-3xl font-bold uppercase tracking-widest text-[#FCD34D] [text-shadow:4px_4px_#000,-2px_-2px_#AA6C39]">
-              Join Server
+              Join Campus
             </h1>
             <p className="text-xs font-bold text-[#555] mt-2 uppercase tracking-wide">
-              Create your character
+              Setup your account
             </p>
           </div>
 
@@ -123,15 +123,15 @@ const Register = () => {
                          hover:bg-[#4ca633] active:translate-y-1 active:shadow-none transition-all
                          text-shadow-[2px_2px_#000]"
             >
-              Spawn Character
+              Sign up
             </button>
           </form>
 
           {/* Footer Link */}
           <div className="mt-6 text-center text-sm font-bold border-t-2 border-[#777] pt-4 border-dashed">
-            <p className="text-[#444] mb-2 text-xs">Already have a character?</p>
+            <p className="text-[#444] mb-2 text-xs">Already have an account?</p>
             <Link to="/" className="text-blue-700 hover:text-blue-500 hover:tracking-wide transition-all uppercase decoration-2 hover:underline">
-              Login To World &rarr;
+              Login  &rarr;
             </Link>
           </div>
 

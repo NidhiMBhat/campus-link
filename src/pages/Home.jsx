@@ -10,8 +10,6 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import RuleBookModal from '../components/RuleBookModal';
 import { checkNearbyRequests, requestNotificationPermission } from "../services/notifications";
 
-
-
 const Home = () => {
   const navigate = useNavigate();
   const currentUser = auth.currentUser;
@@ -27,10 +25,7 @@ const Home = () => {
         hasAcceptedRules: true
       });
       setShowRules(false);
-      
-      // Ask for permission immediately after accepting rules
       requestNotificationPermission(); 
-
     } catch (error) {
       console.error("Error saving rule acceptance:", error);
       setShowRules(false);
@@ -40,7 +35,6 @@ const Home = () => {
   useEffect(() => {
     if (!currentUser) return;
 
-    // --- CHECK USER STATUS (Rules & Credits) ---
     const checkUserProfile = async () => {
       try {
         const userRef = doc(db, "users", currentUser.uid);
@@ -49,15 +43,12 @@ const Home = () => {
         if (userSnap.exists()) {
           const userData = userSnap.data();
 
-          // Check 1: Have they accepted rules yet?
           if (!userData.hasAcceptedRules) {
             setShowRules(true);
           } else {
-             // If rules already accepted, ensure we have permission
              requestNotificationPermission();
           }
 
-          // Check 2: Do they have their starting credits?
           if (userData.credits === undefined) {
              await updateDoc(userRef, { credits: 50 });
           } else if (userData.credits === 0) {
@@ -72,8 +63,6 @@ const Home = () => {
     };
     
     checkUserProfile();
-    // -------------------------------------------
-
     requestAndStoreLocation(currentUser);
     (async () => {
       const result = await checkNearbyRequests(currentUser);
@@ -83,73 +72,79 @@ const Home = () => {
   }, [currentUser]);
 
  return (
-    <div className="mc-landscape-bg min-h-screen pb-20 max-w-4xl mx-auto relative p-6">
+    /* 1. OUTER WRAPPER: Handles Background (Full Screen) */
+    <div className="mc-landscape-bg min-h-screen w-full">
       
-      {showRules && (
-        <RuleBookModal onAccept={handleAcceptRules} />
-      )}
+      {/* 2. INNER WRAPPER: Handles Content Width (Centered) */}
+      <div className="max-w-4xl mx-auto pb-20 relative p-6">
 
-      {/* Header with Minecraft Panel style */}
-      <div className="mc-panel flex justify-between items-center mb-8 p-4">
-        <div>
-          <h1 className="text-xl font-bold text-black uppercase tracking-tight">
-            Welcome back, Player!
-          </h1>
-          <p className="text-[#555555] text-xs font-bold uppercase">
-            Select your quest...
-          </p>
+        {showRules && (
+          <RuleBookModal onAccept={handleAcceptRules} />
+        )}
+
+        {/* Header with Minecraft Panel style */}
+        <div className="mc-panel flex justify-between items-center mb-8 p-4">
+          <div>
+            <h1 className="text-xl font-bold text-black uppercase tracking-tight">
+              Welcome back, Player!
+            </h1>
+            <p className="text-[#555555] text-xs font-bold uppercase">
+              Select your quest...
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+              {/* Notification Slot */}
+              <div className="mc-slot p-1 flex items-center justify-center bg-[#8B8B8B] w-12 h-12">
+                  <NotificationBell currentUser={currentUser} />
+              </div>
+
+              {/* Profile Slot */}
+              <button 
+                  onClick={() => navigate('/profile')} 
+                  className="mc-button p-0 w-12 h-12 flex items-center justify-center"
+              >
+                  <UserCircle size={28} />
+              </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-            {/* Notification Slot */}
-            <div className="mc-slot p-1 flex items-center justify-center bg-[#8B8B8B] w-12 h-12">
-                <NotificationBell currentUser={currentUser} />
-            </div>
+        <LeaderboardCard />
 
-            {/* Profile Slot */}
-            <button 
-                onClick={() => navigate('/profile')} 
-                className="mc-button p-0 w-12 h-12 flex items-center justify-center"
-            >
-                <UserCircle size={28} />
-            </button>
+        {/* Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <NavCard 
+            title="Request Help" 
+            desc="Post a new bounty" 
+            icon={PlusCircle} 
+            to="/request" 
+            className="mc-button-red text-center"
+          />
+          <NavCard 
+            title="Available Tasks" 
+            desc="Earn XP & Credits" 
+            icon={Sword} 
+            to="/tasks" 
+            className="mc-button text-center"
+          />
+          <NavCard 
+            title="My Requests" 
+            desc="Active Bounties" 
+            icon={Map} 
+            to="/my-requests" 
+            className="mc-button text-center"
+          />
+          <NavCard 
+            title="My Tasks" 
+            desc="Current Quests" 
+            icon={CheckSquare} 
+            to="/my-tasks" 
+            className="mc-button text-center"
+          />
         </div>
-      </div>
 
-      <LeaderboardCard />
-
-      {/* Grid Layout using mc-button or mc-panel variations */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <NavCard 
-          title="Request Help" 
-          desc="Post a new bounty" 
-          icon={PlusCircle} 
-          to="/request" 
-          className="mc-button-red text-center"
-        />
-        <NavCard 
-          title="Available Tasks" 
-          desc="Earn XP & Credits" 
-          icon={Sword} 
-          to="/tasks" 
-          className="mc-button text-center"
-        />
-        <NavCard 
-          title="My Requests" 
-          desc="Active Bounties" 
-          icon={Map} 
-          to="/my-requests" 
-          className="mc-button text-center"
-        />
-        <NavCard 
-          title="My Tasks" 
-          desc="Current Quests" 
-          icon={CheckSquare} 
-          to="/my-tasks" 
-          className="mc-button text-center"
-        />
-      </div>
-    </div>
+      </div> {/* End Inner Wrapper */}
+    </div> /* End Outer Wrapper */
   );
 };
 
