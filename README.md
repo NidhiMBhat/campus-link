@@ -1,16 +1,60 @@
-# React + Vite
+# Campus Link
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ A lightweight campus task & help app built with React, Vite, Tailwind CSS and Firebase.
 
-Currently, two official plugins are available:
+ ## Features
+ - Post and claim help requests (bounties)
+ - Task listing, profile and leaderboard
+ - Geolocation and nearby-request notifications
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ ## Tech Stack
+ - React (JSX)
+ - Vite
+ - Tailwind CSS
+ - Firebase (Auth & Firestore)
 
-## React Compiler
+ ## Prerequisites
+ - Node.js (LTS) and npm
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+ ## Quick Setup
 
-## Expanding the ESLint configuration
+ 1. Install dependencies
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+ ```bash
+ npm install
+ ```
+
+ 2. Start dev server
+
+ ```bash
+ npm run dev
+ ```
+
+ 3. Build for production
+
+ ```bash
+ npm run build
+ ```
+
+ ## Firebase
+ - Firebase configuration lives in `src/firebase.js` — replace with your project keys and ensure Firestore rules and Authentication are configured.
+
+ ## Project Structure (important files)
+
+ - `src/main.jsx` — app entry
+ - `src/App.jsx` — root component
+ - `src/firebase.js` — Firebase initialization
+ - `src/pages/` — page views (Home, Tasks, Profile, etc.)
+ - `src/components/` — UI components (NavCard, LeaderboardCard, NotificationBell)
+ - `src/services/` — helper services (location, notifications, completeTask)
+
+ See [src/pages/Home.jsx](src/pages/Home.jsx#L1) for an example of user/profile checks and notifications.
+
+ ## Environment & Permissions
+ - The app requests geolocation and notification permissions from users — test in a secure (HTTPS) environment or via `localhost`.
+
+ ## Contributing
+ - Open issues or submit PRs. Keep changes focused and include small commits.
+
+ ## License
+ - MIT
